@@ -7,7 +7,9 @@ Mobile Semantic HTML UI library.
 **functional**
 
 -   [x] `<Holdable />` functional component (showing a menu on long hold)
--   [] `<Sheet />` functional component (mobile modal showen from bottom withd drag handle)
+-   [x] `<Sheet />` fu nctional component (mobile modal showen from bottom withd drag handle)
+-   [ ] `<Slider />` functional component
+-   [ ] `<TimeInput />` functional component
 
 **semantical**
 

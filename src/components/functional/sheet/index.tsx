@@ -281,6 +281,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
                 {/* Backdrop/Overlay using Popover component */}
                 <Popover
                     visible={isOpen}
+                    variant="transparent"
                     data-closing={isClosing}
                     onClick={handleClose}
                 />

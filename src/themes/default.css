@@ -282,10 +282,9 @@ h6[data-ms-caption] {
     }
 }
 
-/* Sheet theming */
 [data-ms-sheet] {
     background-color: var(--color-neutral-0);
-    box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
 }
 
 [data-ms-sheet-handle-bar] {

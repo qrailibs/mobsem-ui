@@ -4,13 +4,14 @@ import { PropsWithChildren } from "helpers/types";
 import "./styles.css";
 
 export interface PopoverProps extends PropsWithChildren<HTMLDivElement> {
+    variant?: "blur-darken" | "darken" | "blur-muted" | "transparent";
     visible?: boolean;
 }
 
 export const Popover = forwardRef<HTMLDivElement, PopoverProps>(
-    ({ children, visible, ...props }, ref) => {
+    ({ children, visible, variant = "blur-darken", ...props }, ref) => {
         const portalRoot = document.getElementById("portal-root");
-        
+
         if (!portalRoot) {
             console.warn("Portal root element not found");
             return null;
@@ -25,6 +26,7 @@ export const Popover = forwardRef<HTMLDivElement, PopoverProps>(
             <div
                 ref={ref}
                 data-ms-popover
+                data-variant={variant}
                 role="presentation"
                 aria-hidden={!visible}
                 onTouchMove={handleTouchMove}

@@ -9,20 +9,69 @@
 
     z-index: 9998;
     isolation: isolate;
-    animation: ms-popover-fade-in 0.3s ease;
 
     cursor: pointer;
-    
+
     /* Prevent touch scrolling on elements underneath */
     touch-action: none;
     overscroll-behavior: contain;
 
-    &[data-closing="true"] {
-        animation: ms-popover-fade-out 0.4s ease;
+    &[data-variant="blur-darken"] {
+        background: rgba(0, 0, 0, 0.25);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+
+        animation: ms-popover-blur-darken-in 0.3s ease;
+
+        &[data-closing="true"] {
+            animation: ms-popover-blur-darken-out 0.4s ease;
+        }
+    }
+
+    &[data-variant="blur-muted"] {
+        background: transparent;
+
+        mask: linear-gradient(
+            to bottom,
+            transparent 0%,
+            transparent 30%,
+            black 56%,
+            black 100%
+        );
+        -webkit-mask: linear-gradient(
+            to bottom,
+            transparent 0%,
+            transparent 30%,
+            black 56%,
+            black 100%
+        );
+
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+    }
+
+    &[data-variant="darken"] {
+        background: rgba(0, 0, 0, 0.25);
+
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+
+        animation: ms-popover-darken-in 0.3s ease;
+
+        &[data-closing="true"] {
+            animation: ms-popover-darken-out 0.4s ease;
+        }
+    }
+
+    &[data-variant="transparent"] {
+        background: transparent;
+
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
     }
 }
 
-@keyframes ms-popover-fade-in {
+@keyframes ms-popover-blur-darken-in {
     from {
         opacity: 0;
         backdrop-filter: blur(0px);
@@ -35,7 +84,7 @@
     }
 }
 
-@keyframes ms-popover-fade-out {
+@keyframes ms-popover-blur-darken-out {
     from {
         opacity: 1;
         backdrop-filter: blur(8px);
@@ -45,5 +94,23 @@
         opacity: 0;
         backdrop-filter: blur(0px);
         -webkit-backdrop-filter: blur(0px);
+    }
+}
+
+@keyframes ms-popover-darken-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes ms-popover-darken-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
     }
 }
