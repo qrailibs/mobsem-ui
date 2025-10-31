@@ -1,0 +1,107 @@
+[data-ms-holdoverlay] {
+    cursor: grabbing;
+}
+
+[data-ms-holdmenu] {
+    position: fixed;
+    transform: translate(-50%, 0);
+    z-index: 10000;
+    pointer-events: auto;
+
+    overflow: hidden;
+
+    width: 180px;
+    background-color: rgba(255, 255, 255, 0.75);
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    /* Only opacity transitions to avoid breaking pulling */
+    opacity: 0;
+    transition: opacity 0.18s ease;
+}
+
+[data-ms-holdmenu][data-open="true"] {
+    opacity: 1;
+}
+
+[data-ms-holdmenu][data-animation="closing"] {
+    opacity: 0;
+}
+
+[data-ms-holdmenu-item] {
+    appearance: none;
+    background: none;
+    border: none;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-align: left;
+    padding: 10px 12px;
+    cursor: pointer;
+
+    &:active {
+        background-color: var(--color-neutral-0);
+    }
+}
+
+[data-ms-holdmenu-icon] {
+    display: inline-flex;
+    width: 18px;
+    height: 18px;
+    align-items: center;
+    justify-content: center;
+}
+
+[data-ms-holdmenu-label] {
+    flex: 1;
+}
+
+[data-ms-holdable] {
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+
+    * {
+        user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        -webkit-touch-callout: none;
+    }
+
+    &[data-state="idle"] {
+        cursor: pointer;
+    }
+    &[data-state="pressing"] {
+        cursor: pointer;
+        filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.18))
+            drop-shadow(0 20px 36px rgba(0, 0, 0, 0.35));
+        transition: filter 0.15s ease;
+    }
+    &[data-state="active"] {
+        cursor: grabbing;
+
+        transition: none !important;
+        z-index: 9999;
+        animation: floatUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        transform-origin: center;
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+    }
+}
+
+@keyframes floatUp {
+    0% {
+        transform: scale(1);
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+    }
+    50% {
+        transform: scale(1.06);
+    }
+    100% {
+        transform: scale(1.03);
+        filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.3));
+    }
+}

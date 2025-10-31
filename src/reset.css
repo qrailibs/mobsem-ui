@@ -1,0 +1,25 @@
+html,
+body {
+    overscroll-behavior: none;
+    touch-action: none;
+    height: 100%;
+}
+
+*,
+*:before,
+*:after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.app {
+    width: 100%;
+}

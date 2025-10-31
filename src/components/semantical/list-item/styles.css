@@ -1,0 +1,5 @@
+[data-ms-listitem] {
+    width: 100%;
+
+    padding: var(--item-padding-x) var(--item-padding-y);
+}

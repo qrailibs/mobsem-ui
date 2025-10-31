@@ -1,0 +1,36 @@
+{
+    "name": "mobsem-ui",
+    "version": "1.0.0",
+    "description": "Mobile Semantic UI library, with great UX and accessibility",
+    "keywords": [
+        "typescript",
+        "react"
+    ],
+    "main": "src/index.tsx",
+    "dependencies": {
+        "loader-utils": "3.2.1",
+        "react": "18.2.0",
+        "react-dom": "18.2.0",
+        "react-scripts": "5.0.1"
+    },
+    "devDependencies": {
+        "@types/react": "18.2.38",
+        "@types/react-dom": "18.2.15",
+        "typescript": "4.4.4"
+    },
+    "scripts": {
+        "dev": "react-scripts start",
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test --env=jsdom",
+        "eject": "react-scripts eject",
+        "preinstall": "node -e \"if (!/pnpm/.test(process.env.npm_config_user_agent||'')) { console.error('This repository enforces pnpm. Use: corepack enable && pnpm install'); process.exit(1) }\""
+    },
+    "browserslist": [
+        ">0.2%",
+        "not dead",
+        "not ie <= 11",
+        "not op_mini all"
+    ],
+    "packageManager": "pnpm@9"
+}

@@ -1,0 +1,4 @@
+[data-ms-divider] {
+    width: 100%;
+    margin: 0 var(--item-padding-x, 0);
+}
