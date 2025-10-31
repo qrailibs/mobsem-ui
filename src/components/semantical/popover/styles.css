@@ -1,19 +1,28 @@
 [data-ms-popover] {
     position: fixed;
     inset: 0;
+
     background: rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
     z-index: 9998;
-    animation: fadeIn 0.3s ease;
+    isolation: isolate;
+    animation: ms-popover-fade-in 0.3s ease;
+
     cursor: pointer;
+    
+    /* Prevent touch scrolling on elements underneath */
+    touch-action: none;
+    overscroll-behavior: contain;
 
     &[data-closing="true"] {
-        animation: fadeOut 0.4s ease;
+        animation: ms-popover-fade-out 0.4s ease;
     }
 }
 
-@keyframes fadeIn {
+@keyframes ms-popover-fade-in {
     from {
         opacity: 0;
         backdrop-filter: blur(0px);
@@ -21,16 +30,16 @@
     }
     to {
         opacity: 1;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
 }
 
-@keyframes fadeOut {
+@keyframes ms-popover-fade-out {
     from {
         opacity: 1;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
     to {
         opacity: 0;

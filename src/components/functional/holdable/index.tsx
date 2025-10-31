@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, ReactElement } from "react";
+import { createPortal } from "react-dom";
 
 import { useLongPress } from "hooks/useLongPress";
 import { PropsWithChildren, PropsWithRef } from "helpers/types";
@@ -6,23 +7,22 @@ import { Popover } from "components/semantical";
 
 import "./styles.css";
 
-type HoldMenuItemVariant = "default" | "destructive" | "secondary";
-
 export interface HoldMenuItem {
     icon?: ReactElement;
     label: string;
-    variant?: HoldMenuItemVariant;
-    onSelect: () => void;
+    variant?: "default" | "destructive" | "secondary";
+    onHandle: () => void;
 }
 
 interface HoldableProps extends PropsWithChildren<HTMLElement> {
     render: (props: PropsWithRef<HTMLLIElement>) => ReactElement;
-    menu?: HoldMenuItem[];
+    menu: HoldMenuItem[];
 }
 
 const HOLD_MOVE_OFFSET_PCT = 0.06; // 6%
 const CLOSE_ANIMATION_MS = 250;
-const LONG_PRESS_DELAY = 600;
+const LONG_PRESS_START_DELAY = 400;
+const LONG_PRESS_POP_DELAY = 800;
 
 export function Holdable({
     children,
@@ -36,6 +36,7 @@ export function Holdable({
     const [pressing, setPressing] = useState(false);
     const [pressingClosing, setPressingClosing] = useState(false);
     const [offset, setOffset] = useState({ x: 0, y: 0 });
+    const [bouncing, setBouncing] = useState(false);
     const [position, setPosition] = useState({
         x: 0,
         y: 0,
@@ -48,6 +49,14 @@ export function Holdable({
     const centerRef = useRef({ x: 0, y: 0 });
     const pressingTimerRef = useRef<number | null>(null);
     const offsetAnimRef = useRef<number | null>(null);
+    const scrollableParentRef = useRef<HTMLElement | null>(null);
+    const originalStylesRef = useRef<{
+        overflow?: string;
+        overflowX?: string;
+        overflowY?: string;
+        touchAction?: string;
+        pointerEvents?: string;
+    }>({});
 
     // --- Handlers ---
     const handleMove = (clientX: number, clientY: number) => {
@@ -57,26 +66,106 @@ export function Holdable({
         setOffset({ x: dx, y: dy });
     };
 
-    const animateOffsetToZero = (durationMs = 220) => {
+    const animateOffsetToZero = (durationMs = 400) => {
+        // CSS handles the transform transition when data-bounce=true
         if (offsetAnimRef.current) {
             cancelAnimationFrame(offsetAnimRef.current);
             offsetAnimRef.current = null;
         }
-        const start = { x: offset.x, y: offset.y };
-        const startTime = performance.now();
-        const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
-        const step = () => {
-            const now = performance.now();
-            const t = Math.min(1, (now - startTime) / durationMs);
-            const e = easeOutCubic(t);
-            setOffset({ x: start.x * (1 - e), y: start.y * (1 - e) });
-            if (t < 1) {
-                offsetAnimRef.current = requestAnimationFrame(step);
-            } else {
-                offsetAnimRef.current = null;
+        setBouncing(true);
+        setOffset({ x: 0, y: 0 });
+        window.setTimeout(() => setBouncing(false), durationMs);
+    };
+
+    const findScrollableParent = () => {
+        let element = itemRef.current?.parentElement;
+        while (element && element !== document.body) {
+            const style = window.getComputedStyle(element);
+            const overflowY = style.overflowY;
+            const overflowX = style.overflowX;
+
+            // Check if element has scrollable overflow
+            const isScrollable =
+                overflowY === "scroll" ||
+                overflowY === "auto" ||
+                overflowX === "scroll" ||
+                overflowX === "auto";
+
+            // Check if element actually has scrollable content
+            const hasScrollableContent =
+                element.scrollHeight > element.clientHeight ||
+                element.scrollWidth > element.clientWidth;
+
+            if (isScrollable && hasScrollableContent) {
+                return element;
             }
-        };
-        offsetAnimRef.current = requestAnimationFrame(step);
+
+            element = element.parentElement;
+        }
+        return null;
+    };
+
+    const disableScrollableParent = () => {
+        const parent = findScrollableParent();
+        if (parent) {
+            scrollableParentRef.current = parent;
+
+            // Store original styles
+            originalStylesRef.current = {
+                overflow: parent.style.overflow,
+                overflowX: parent.style.overflowX,
+                overflowY: parent.style.overflowY,
+                touchAction: parent.style.touchAction,
+                pointerEvents: parent.style.pointerEvents,
+            };
+
+            // Disable scrolling
+            parent.style.overflow = "hidden";
+            parent.style.touchAction = "none";
+            parent.style.pointerEvents = "none";
+        }
+    };
+
+    const enableScrollableParent = () => {
+        if (scrollableParentRef.current) {
+            const parent = scrollableParentRef.current;
+
+            // Restore original styles
+            if (originalStylesRef.current.overflow !== undefined) {
+                parent.style.overflow = originalStylesRef.current.overflow;
+            } else {
+                parent.style.removeProperty("overflow");
+            }
+
+            if (originalStylesRef.current.overflowX !== undefined) {
+                parent.style.overflowX = originalStylesRef.current.overflowX;
+            } else {
+                parent.style.removeProperty("overflow-x");
+            }
+
+            if (originalStylesRef.current.overflowY !== undefined) {
+                parent.style.overflowY = originalStylesRef.current.overflowY;
+            } else {
+                parent.style.removeProperty("overflow-y");
+            }
+
+            if (originalStylesRef.current.touchAction !== undefined) {
+                parent.style.touchAction =
+                    originalStylesRef.current.touchAction;
+            } else {
+                parent.style.removeProperty("touch-action");
+            }
+
+            if (originalStylesRef.current.pointerEvents !== undefined) {
+                parent.style.pointerEvents =
+                    originalStylesRef.current.pointerEvents;
+            } else {
+                parent.style.removeProperty("pointer-events");
+            }
+
+            scrollableParentRef.current = null;
+            originalStylesRef.current = {};
+        }
     };
 
     const captureCurrentPosition = () => {
@@ -109,6 +198,10 @@ export function Holdable({
     const handleClose = () => {
         setClosing(true);
         setOffset({ x: 0, y: 0 });
+
+        // Re-enable scrolling on parent container
+        enableScrollableParent();
+
         setTimeout(() => {
             setOpened(false);
             setClosing(false);
@@ -122,7 +215,7 @@ export function Holdable({
 
     // --- Long press ---
     const longPressBindings = useLongPress({
-        delay: LONG_PRESS_DELAY,
+        delay: LONG_PRESS_POP_DELAY,
         onLongPress: handleOpen,
         onMove: handleMove,
         onStart: () => {
@@ -133,23 +226,31 @@ export function Holdable({
             }
             setOffset({ x: 0, y: 0 });
             captureCurrentPosition();
+
             pressingTimerRef.current = window.setTimeout(() => {
                 setPressing(true);
+                // Disable scrolling on parent container when pressing state activates
+                disableScrollableParent();
                 pressingTimerRef.current = null;
-            }, 80);
+            }, LONG_PRESS_START_DELAY);
         },
         onEnd: () => {
             if (pressingTimerRef.current) {
                 window.clearTimeout(pressingTimerRef.current);
                 pressingTimerRef.current = null;
             }
+
+            // Re-enable scrolling on parent container if not opened
+            if (!opened) {
+                enableScrollableParent();
+            }
+
             if (opened) {
-                // Opened flow closes via global end → handleClose
                 setPressing(false);
                 animateOffsetToZero();
                 return;
             }
-            // Cancelled before opening: play a quick fade/scale-out
+
             setPressing(false);
             setPressingClosing(true);
             setOffset({ x: 0, y: 0 });
@@ -170,15 +271,24 @@ export function Holdable({
             handleMove(point.clientX, point.clientY);
         };
 
+        const onGlobalEnd = () => {
+            // Only bounce back; do not close on release
+            animateOffsetToZero();
+        };
+
         document.addEventListener("keydown", onEscape);
         document.addEventListener("mousemove", onGlobalMove);
         document.addEventListener("touchmove", onGlobalMove);
+        document.addEventListener("mouseup", onGlobalEnd);
+        document.addEventListener("touchend", onGlobalEnd);
         document.body.style.overflow = "hidden";
 
         return () => {
             document.removeEventListener("keydown", onEscape);
             document.removeEventListener("mousemove", onGlobalMove);
             document.removeEventListener("touchmove", onGlobalMove);
+            document.removeEventListener("mouseup", onGlobalEnd);
+            document.removeEventListener("touchend", onGlobalEnd);
             document.body.style.overflow = "";
         };
     }, [opened]);
@@ -188,21 +298,16 @@ export function Holdable({
         return () => {
             if (offsetAnimRef.current)
                 cancelAnimationFrame(offsetAnimRef.current);
+            // Ensure scrollable parent is re-enabled on unmount
+            enableScrollableParent();
         };
     }, []);
 
     // --- Render ---
+    const portalRoot = document.getElementById("portal-root");
+
     return (
         <>
-            {opened && (
-                <Popover
-                    visible={opened}
-                    data-closing={closing}
-                    data-ms-holdoverlay
-                    onClick={handleClose}
-                />
-            )}
-
             {render({
                 ref: itemRef,
                 role: "listitem",
@@ -212,66 +317,90 @@ export function Holdable({
                 ...restProps,
             })}
 
-            {/* Floating copy rendered on top while opened */}
-            {(pressing || opened || pressingClosing) &&
-                render({
-                    role: "listitem",
-                    "aria-hidden": true,
-                    "data-ms-holdable": true,
-                    "data-state": pressing ? "pressing" : "active",
-                    style: positioned({
-                        x: position.x,
-                        y: position.y,
-                        offsetX: offset.x,
-                        offsetY: offset.y,
-                        width: position.width,
-                        height: position.height,
-                        scale: pressing
-                            ? 1
-                            : opened
-                            ? closing
-                                ? 0.98
-                                : 1.03
-                            : 0.98,
-                        opacity: pressing || (opened && !closing) ? 1 : 0,
-                    }),
-                })}
+            {portalRoot &&
+                (pressing || opened || pressingClosing) &&
+                createPortal(
+                    <>
+                        {/* Floating copy rendered on top while opened */}
+                        {render({
+                            "aria-hidden": true,
+                            "data-ms-holdable": true,
+                            "data-state": pressing
+                                ? "pressing"
+                                : opened
+                                ? "active"
+                                : pressingClosing
+                                ? "closing"
+                                : "idle",
+                            "data-bounce": bouncing ? "true" : undefined,
+                            style: positioned({
+                                x: position.x,
+                                y: position.y,
+                                offsetX: offset.x,
+                                offsetY: offset.y,
+                                width: position.width,
+                                height: position.height,
+                                scale: pressing
+                                    ? 1
+                                    : opened
+                                    ? closing
+                                        ? 0.98
+                                        : 1.03
+                                    : 0.98,
+                                opacity:
+                                    pressing || (opened && !closing) ? 1 : 0,
+                            }),
+                        })}
 
-            {/* Context menu */}
-            {opened && menu && menu.length > 0 && (
-                <div
-                    role="menu"
-                    data-ms-holdmenu
-                    data-open={opened && !closing}
-                    data-animation={closing ? "closing" : undefined}
-                    style={menuPosition({
-                        x: position.x,
-                        y: position.y,
-                        width: position.width,
-                        height: position.height,
-                        offsetX: offset.x,
-                        offsetY: offset.y,
-                    })}
-                    onClick={(e) => e.stopPropagation()}
-                >
-                    {menu.map((item, index) => (
-                        <button
-                            key={`${item.label}-${index}`}
-                            type="button"
-                            role="menuitem"
-                            data-ms-holdmenu-item
-                            data-variant={item.variant ?? "default"}
-                            onClick={() => handleSelect(item.onSelect)}
-                        >
-                            {item.icon && (
-                                <span aria-hidden data-ms-holdmenu-icon>
-                                    {item.icon}
-                                </span>
-                            )}
-                            <span data-ms-holdmenu-label>{item.label}</span>
-                        </button>
-                    ))}
-                </div>
+                        {/* Context menu */}
+                        {opened && menu && menu.length > 0 && (
+                            <div
+                                role="menu"
+                                data-ms-holdmenu
+                                data-open={opened && !closing}
+                                data-animation={closing ? "closing" : undefined}
+                                data-bounce={bouncing ? "true" : undefined}
+                                style={menuPosition({
+                                    x: position.x,
+                                    y: position.y,
+                                    width: position.width,
+                                    height: position.height,
+                                    offsetX: offset.x,
+                                    offsetY: offset.y,
+                                })}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                {menu.map((item, index) => (
+                                    <button
+                                        key={`${item.label}-${index}`}
+                                        type="button"
+                                        role="menuitem"
+                                        aria-label={item.label}
+                                        data-ms-holdmenu-item
+                                        data-variant={item.variant ?? "default"}
+                                        onClick={() =>
+                                            handleSelect(item.onHandle)
+                                        }
+                                    >
+                                        {item.icon && (
+                                            <span role="img">{item.icon}</span>
+                                        )}
+                                        <span>{item.label}</span>
+                                    </button>
+                                ))}
+                            </div>
+                        )}
+                    </>,
+                    portalRoot
+                )}
+
+            {opened && (
+                <Popover
+                    visible={opened}
+                    data-closing={closing}
+                    data-ms-holdoverlay
+                    onClick={handleClose}
+                />
             )}
         </>
     );
@@ -297,17 +426,12 @@ function positioned({
     opacity?: number;
 }) {
     return {
-        position: "fixed" as const,
         left: x,
         top: y,
         width: width,
         height: height,
-        zIndex: 9999,
-        pointerEvents: "none" as const,
         transform: `translate(${offsetX}px, ${offsetY}px) scale(${scale})`,
         opacity,
-        willChange: "transform" as const,
-        transformOrigin: "center" as const,
     };
 }
 
@@ -329,11 +453,8 @@ function menuPosition({
     const centerX = x + width / 2;
     const belowY = y + height + 12; // 12px gap below the item
     return {
-        position: "fixed" as const,
         left: centerX,
         top: belowY,
         transform: `translate(calc(-50% + ${offsetX}px), ${offsetY}px)`,
-        zIndex: 9999,
-        willChange: "transform" as const,
     };
 }

@@ -5,9 +5,10 @@ import "./styles.css";
 
 export interface DividerProps extends Props<HTMLHRElement> {}
 
-export const Divider = forwardRef<HTMLHRElement, DividerProps>(function (
-    { children, ...props },
-    ref
-) {
-    return <hr ref={ref} data-ms-divider {...props} />;
-});
+export const Divider = forwardRef<HTMLHRElement, DividerProps>(
+    ({ children, ...props }, ref) => {
+        return <hr ref={ref} data-ms-divider {...props} />;
+    }
+);
+
+Divider.displayName = "Divider";

@@ -1,0 +1,15 @@
+[data-ms-checkbox][data-bounce="true"] {
+    animation: ms-checkbox-bounce 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes ms-checkbox-bounce {
+    0% {
+        transform: scale(0.8);
+    }
+    60% {
+        transform: scale(1.06);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

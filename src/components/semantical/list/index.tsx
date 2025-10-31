@@ -8,26 +8,25 @@ export interface ListProps extends PropsWithChildren<HTMLUListElement> {
     gap?: number;
 }
 
-export const List = forwardRef<HTMLUListElement, ListProps>(function (
-    { children, ...props },
-    ref
-) {
-    return (
-        <ul
-            ref={ref}
-            data-ms-list
-            role="list"
-            style={
-                {
-                    "--item-padding-x": `${props.px ?? 8}px`,
-                    "--item-padding-y": `${props.py ?? 12}px`,
-                    "--item-gap": `${props.gap ?? 4}px`,
-                    ...props.style,
-                } as CSSProperties
-            }
-            {...props}
-        >
-            {children}
-        </ul>
-    );
-});
+export const List = forwardRef<HTMLUListElement, ListProps>(
+    ({ children, ...props }, ref) => {
+        return (
+            <ul
+                ref={ref}
+                data-ms-list
+                role="list"
+                style={
+                    {
+                        "--container-gap": `${props.gap ?? 4}px`,
+                        ...props.style,
+                    } as CSSProperties
+                }
+                {...props}
+            >
+                {children}
+            </ul>
+        );
+    }
+);
+
+List.displayName = "List";

@@ -18,8 +18,36 @@ body {
 
     -webkit-tap-highlight-color: transparent;
     outline: none;
+
+    user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .app {
     width: 100%;
+}
+
+button {
+    cursor: pointer;
+}
+
+button,
+input,
+textarea,
+select {
+    appearance: none;
+    border: none;
+}
+
+#portal-root {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9997;
+}
+
+#portal-root > * {
+    pointer-events: auto;
 }
