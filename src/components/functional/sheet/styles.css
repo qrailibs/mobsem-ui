@@ -1,0 +1,172 @@
+/* Sheet / Bottom Modal Component Styles */
+[data-ms-sheet] {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 9999;
+
+    display: flex;
+    flex-direction: column;
+
+    max-height: calc(var(--sheet-viewport-height, 100vh) - 40px);
+    height: var(--sheet-default-height, 50%);
+
+    border-radius: 20px 20px 0 0;
+
+    transform: translateY(calc(100% + 20px));
+    opacity: 0;
+
+    transition: transform 0.25s ease, opacity 0.25s ease, height 0.25s ease;
+
+    touch-action: none;
+
+    &[data-open="true"] {
+        animation: ms-sheet-slide-up 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)
+            forwards;
+        /* Prevent animation from re-running after initial open */
+        animation-fill-mode: forwards;
+    }
+
+    /* Settled open state - no dragging, no animating, no closing */
+    &[data-open="true"]:not([data-dragging="true"]):not(
+            [data-animating="true"]
+        ):not([data-closing="true"]) {
+        animation: none;
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    &[data-fullscreen="true"] {
+        height: calc(var(--sheet-viewport-height, 100vh) - 40px);
+        border-radius: 20px 20px 0 0;
+    }
+
+    &[data-fullscreen="true"]:not([data-closing="true"]) {
+        transform: translateY(0) !important;
+    }
+
+    &[data-closing="true"] {
+        /* Animate from current position (including any drag offset) to bottom */
+        animation: none !important;
+        transform: translateY(calc(100% + 20px)) !important;
+        opacity: 0 !important;
+        transition: transform 0.25s cubic-bezier(0.4, 0, 1, 1),
+            opacity 0.25s cubic-bezier(0.4, 0, 1, 1) !important;
+        /* Keep height fixed - don't let it change during close */
+        height: var(
+            --sheet-closing-height,
+            var(--sheet-default-height, 50%)
+        ) !important;
+    }
+
+    &[data-dragging="true"] {
+        animation: none;
+        transition: none;
+        opacity: 1;
+        transform: translateY(0);
+
+        /* Dragging down from default: translate down (for closing gesture) */
+        &:not([data-fullscreen="true"]) {
+            /* Dragging up from default: expand height smoothly */
+            height: clamp(
+                var(--sheet-default-height, 50%),
+                calc(
+                    var(--sheet-default-height, 50%) -
+                        var(--sheet-drag-offset, 0px)
+                ),
+                calc(var(--sheet-viewport-height, 100vh) - 40px)
+            );
+
+            /* Only translate down when drag offset is positive (closing) */
+            transform: translateY(max(0px, var(--sheet-drag-offset, 0px)));
+        }
+
+        /* Dragging down from fullscreen: reduce height smoothly */
+        &[data-fullscreen="true"] {
+            height: clamp(
+                var(--sheet-default-height, 50%),
+                calc(
+                    calc(var(--sheet-viewport-height, 100vh) - 40px) -
+                        var(--sheet-drag-offset, 0px)
+                ),
+                calc(var(--sheet-viewport-height, 100vh) - 40px)
+            );
+            transform: translateY(0);
+        }
+    }
+
+    &[data-animating="true"] {
+        animation: none;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+            height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (min-width: 768px) {
+    [data-ms-sheet] {
+        width: 520px;
+
+        left: calc(50% - 260px);
+        right: auto;
+    }
+}
+
+@keyframes ms-sheet-slide-up {
+    0% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes ms-sheet-slide-down {
+    0% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+}
+
+[data-ms-sheet-handle] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 12px;
+
+    cursor: grab;
+    user-select: none;
+    -webkit-user-select: none;
+
+    &:active {
+        cursor: grabbing;
+    }
+}
+
+[data-ms-sheet-handle-bar] {
+    width: 36px;
+    height: 5px;
+
+    border-radius: 999px;
+
+    transition: background-color 0.15s ease;
+}
+
+[data-ms-sheet-content] {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding: 0 20px 20px 20px;
+
+    -webkit-overflow-scrolling: touch;
+}

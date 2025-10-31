@@ -251,10 +251,16 @@ export function Holdable({
                 return;
             }
 
-            setPressing(false);
-            setPressingClosing(true);
-            setOffset({ x: 0, y: 0 });
-            setTimeout(() => setPressingClosing(false), CLOSE_ANIMATION_MS);
+            // Only show closing animation if we were actually in pressing state
+            if (pressing) {
+                setPressing(false);
+                setPressingClosing(true);
+                setOffset({ x: 0, y: 0 });
+                setTimeout(() => setPressingClosing(false), CLOSE_ANIMATION_MS);
+            } else {
+                // Quick click - just reset
+                setPressing(false);
+            }
         },
     });
 

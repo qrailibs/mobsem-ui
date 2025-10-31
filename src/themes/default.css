@@ -54,7 +54,7 @@ html {
     display: flex;
     flex-direction: column;
 
-    padding: 24px 16px;
+    padding: 0 16px;
 }
 
 /* Heading */
@@ -62,45 +62,52 @@ hgroup {
     display: flex;
     flex-direction: column;
     gap: 4px;
+
+    & > h1,
+    & > h2,
+    & > h3,
+    & > h4,
+    & > h5,
+    & > h6 {
+        margin-bottom: 0;
+    }
 }
 
-[data-ms-caption] {
-    &h1 {
-        font-size: 24px;
-        font-weight: 600;
+h1[data-ms-caption] {
+    font-size: 24px;
+    font-weight: 600;
 
-        margin-bottom: 12px;
-    }
-    &h2 {
-        font-size: 22px;
-        font-weight: 600;
+    margin-bottom: 12px;
+}
+h2[data-ms-caption] {
+    font-size: 22px;
+    font-weight: 600;
 
-        margin-bottom: 12px;
-    }
-    &h3 {
-        font-size: 20px;
-        font-weight: 600;
+    margin-bottom: 12px;
+}
+h3[data-ms-caption] {
+    font-size: 20px;
+    font-weight: 600;
 
-        margin-bottom: 8px;
-    }
-    &h4 {
-        font-size: 18px;
-        font-weight: 500;
+    margin-bottom: 8px;
+}
+h4[data-ms-caption] {
+    font-size: 18px;
+    font-weight: 500;
 
-        margin-bottom: 6px;
-    }
-    &h5 {
-        font-size: 16px;
-        font-weight: 500;
+    margin-bottom: 6px;
+}
+h5[data-ms-caption] {
+    font-size: 16px;
+    font-weight: 500;
 
-        margin-bottom: 6px;
-    }
-    &h6 {
-        font-size: 15px;
-        font-weight: 500;
+    margin-bottom: 6px;
+}
+h6[data-ms-caption] {
+    font-size: 15px;
+    font-weight: 500;
 
-        margin-bottom: 4px;
-    }
+    margin-bottom: 4px;
 }
 
 /* Checkbox */
@@ -148,8 +155,8 @@ hgroup {
     justify-content: center;
     gap: 4px;
 
-    padding: 10px 14px;
-    border-radius: 10px;
+    padding: 12px 16px;
+    border-radius: 12px;
 
     font-size: 16px;
     font-weight: 500;
@@ -158,6 +165,19 @@ hgroup {
     cursor: pointer;
 
     background-color: var(--color-neutral-200);
+
+    &[data-variant="outline"] {
+        background-color: transparent;
+        border: 1px solid var(--color-neutral-300);
+    }
+    &[data-variant="accent"] {
+        background-color: var(--color-accent-500);
+        color: var(--color-neutral-0);
+    }
+    &[data-variant="danger"] {
+        background-color: var(--color-danger-500);
+        color: var(--color-neutral-0);
+    }
 }
 
 /* Scrollable */
@@ -259,5 +279,45 @@ hgroup {
     }
     &[data-variant="destructive"] {
         color: var(--color-danger-500);
+    }
+}
+
+/* Sheet theming */
+[data-ms-sheet] {
+    background-color: var(--color-neutral-0);
+    box-shadow: 0 -4px 40px rgba(0, 0, 0, 0.15);
+}
+
+[data-ms-sheet-handle-bar] {
+    background-color: var(--color-neutral-300);
+
+    [data-ms-sheet-handle]:hover & {
+        background-color: var(--color-neutral-400);
+    }
+
+    [data-ms-sheet-handle]:active & {
+        background-color: var(--color-neutral-500);
+    }
+}
+
+[data-ms-sheet-content] {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-neutral-300) transparent;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--color-neutral-300);
+        border-radius: 999px;
+    }
+
+    &::-webkit-scrollbar-thumb:hover {
+        background-color: var(--color-neutral-400);
     }
 }

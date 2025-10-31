@@ -65,6 +65,14 @@
 }
 
 [data-ms-holdable] {
+    /* Prevent text selection and dragging on desktop */
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-drag: none;
+    -webkit-touch-callout: none;
+    
     &[aria-hidden="true"] {
         position: fixed;
         pointer-events: none;

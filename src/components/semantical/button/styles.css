@@ -2,20 +2,20 @@
     transition: transform 0.15s ease-out;
 
     &[data-pressed="true"] {
-        transform: scale(0.97);
-        transition: transform 80ms ease-out;
+        transform: scale(0.99);
+        transition: transform 50ms ease-out;
     }
     &[data-bounce="true"] {
-        animation: ms-button-bounce 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        animation: ms-button-bounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
 }
 
 @keyframes ms-button-bounce {
     0% {
-        transform: scale(0.97);
+        transform: scale(0.99);
     }
     60% {
-        transform: scale(1.03);
+        transform: scale(1.01);
     }
     100% {
         transform: scale(1);

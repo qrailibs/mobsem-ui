@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Holdable } from "components/functional/holdable";
+import { Holdable, Sheet } from "components/functional";
 import {
     Button,
     Caption,
@@ -25,6 +25,8 @@ export default function App() {
         { id: 9, name: "Item 9", checked: false },
     ]);
 
+    const [sheetOpen, setSheetOpen] = useState(false);
+
     const handleCheck = (id: number) => {
         setItems((prev) =>
             prev.map((item) =>
@@ -35,7 +37,7 @@ export default function App() {
 
     return (
         <div className="app">
-            <Scrollable scroll="y" h={240} gap={8}>
+            <Scrollable scroll="y" h={240} gap={0}>
                 <Caption level={1}>Title</Caption>
 
                 <List px={6} py={10} gap={4}>
@@ -69,7 +71,37 @@ export default function App() {
                     ))}
                 </List>
             </Scrollable>
-            <Button>Try it</Button>
+            <Button onClick={() => setSheetOpen(true)}>Open Sheet</Button>
+
+            <Sheet
+                open={sheetOpen}
+                onClose={() => setSheetOpen(false)}
+                defaultHeight={40}
+            >
+                <Caption level={2}>Sheet Modal</Caption>
+                <p style={{ marginTop: "16px", lineHeight: "1.6" }}>
+                    This is a mobile bottom sheet component!
+                    <br />
+                    <br />
+                    Try dragging the handle at the top:
+                    <br />
+                    • Drag up to expand to fullscreen
+                    <br />
+                    • Drag down to close the sheet
+                    <br />
+                    <br />
+                    Everything is smoothly animated with native-like feel.
+                </p>
+                <div style={{ marginTop: "24px", display: "flex", gap: "8px" }}>
+                    <Button
+                        data-variant="accent"
+                        onClick={() => setSheetOpen(false)}
+                    >
+                        Got it
+                    </Button>
+                    <Button onClick={() => setSheetOpen(false)}>Close</Button>
+                </div>
+            </Sheet>
         </div>
     );
 }
