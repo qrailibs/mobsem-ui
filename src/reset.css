@@ -1,5 +1,6 @@
 html,
-body {
+body,
+.root {
     overscroll-behavior: none;
     touch-action: none;
     height: 100%;

@@ -1,0 +1,33 @@
+[data-ms-searchinput-wrapper] {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    & svg {
+        position: absolute;
+        left: 10px;
+
+        width: 18px;
+        height: 18px;
+
+        pointer-events: none;
+
+        opacity: 0.35;
+    }
+}
+
+[data-ms-searchinput] {
+    display: block;
+    width: 100%;
+
+    padding: 10px 12px 10px 32px;
+
+    font-size: 16px;
+    font-weight: 400;
+
+    &::-webkit-search-cancel-button {
+        -webkit-appearance: none;
+        appearance: none;
+    }
+}

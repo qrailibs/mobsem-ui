@@ -7,6 +7,11 @@ import {
     ListItem,
     Scrollable,
     Checkbox,
+    TextInput,
+    TextArea,
+    SearchInput,
+    Section,
+    Label,
 } from "components/semantical";
 
 import "reset.css";
@@ -26,6 +31,9 @@ export default function App() {
     ]);
 
     const [sheetOpen, setSheetOpen] = useState(false);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [name, setName] = useState("");
+    const [bio, setBio] = useState("");
 
     const handleCheck = (id: number) => {
         setItems((prev) =>
@@ -35,40 +43,79 @@ export default function App() {
         );
     };
 
+    const filteredItems = items.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+
     return (
         <div className="app">
-            <Scrollable scroll="y" h={240} gap={0}>
-                <Caption level={1}>Title</Caption>
+            <Caption level={1}>MobSem UI Components</Caption>
+
+            <List gap={8}>
+                <SearchInput
+                    placeholder="Search items..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                />
+
+                <TextInput
+                    placeholder="Enter your name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                />
+
+                <TextArea
+                    placeholder="Tell us about yourself..."
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                />
+            </List>
+
+            <Scrollable
+                scroll="y"
+                h={240}
+                gap={0}
+                style={{ marginTop: "16px" }}
+            >
+                <Caption level={2}>Items List</Caption>
 
                 <List px={6} py={10} gap={4}>
-                    {items.map((item) => (
-                        <Holdable
-                            key={item.id}
-                            render={(props) => (
-                                <ListItem {...props}>
-                                    <Checkbox
-                                        defaultChecked={item.checked}
-                                        onChange={() => handleCheck(item.id)}
-                                    />
-                                    <hgroup>
-                                        <p>{item.name}</p>
-                                        <small>Option</small>
-                                    </hgroup>
-                                </ListItem>
-                            )}
-                            menu={[
-                                {
-                                    label: "Edit",
-                                    onHandle: () => console.log("Edit"),
-                                },
-                                {
-                                    label: "Delete",
-                                    variant: "destructive",
-                                    onHandle: () => console.log("Delete"),
-                                },
-                            ]}
-                        />
-                    ))}
+                    {filteredItems.length > 0 ? (
+                        filteredItems.map((item) => (
+                            <Holdable
+                                key={item.id}
+                                render={(props) => (
+                                    <ListItem {...props}>
+                                        <Checkbox
+                                            defaultChecked={item.checked}
+                                            onChange={() =>
+                                                handleCheck(item.id)
+                                            }
+                                        />
+                                        <hgroup>
+                                            <p>{item.name}</p>
+                                            <small>Option</small>
+                                        </hgroup>
+                                    </ListItem>
+                                )}
+                                menu={[
+                                    {
+                                        label: "Edit",
+                                        onHandle: () => console.log("Edit"),
+                                    },
+                                    {
+                                        label: "Delete",
+                                        variant: "destructive",
+                                        onHandle: () => console.log("Delete"),
+                                    },
+                                ]}
+                            />
+                        ))
+                    ) : (
+                        <p style={{ textAlign: "center", opacity: 0.5 }}>
+                            No items found
+                        </p>
+                    )}
                 </List>
             </Scrollable>
             <Button onClick={() => setSheetOpen(true)}>Open Sheet</Button>
@@ -76,30 +123,39 @@ export default function App() {
             <Sheet
                 open={sheetOpen}
                 onClose={() => setSheetOpen(false)}
-                defaultHeight={40}
+                defaultHeight={50}
             >
-                <Caption level={2}>Sheet Modal</Caption>
-                <p style={{ marginTop: "16px", lineHeight: "1.6" }}>
-                    This is a mobile bottom sheet component!
-                    <br />
-                    <br />
-                    Try dragging the handle at the top:
-                    <br />
-                    • Drag up to expand to fullscreen
-                    <br />
-                    • Drag down to close the sheet
-                    <br />
-                    <br />
-                    Everything is smoothly animated with native-like feel.
-                </p>
-                <div style={{ marginTop: "24px", display: "flex", gap: "8px" }}>
+                <Caption level={2}>User Profile</Caption>
+
+                <Section style={{ marginTop: "16px" }}>
+                    <div
+                        style={{
+                            display: "flex",
+                            gap: "8px",
+                            alignItems: "center",
+                        }}
+                    >
+                        <Label variant="tag">Premium</Label>
+                        <Label variant="alert">2 notifications</Label>
+                    </div>
+
+                    <TextInput placeholder="Username" defaultValue={name} />
+                    <TextInput
+                        placeholder="Email"
+                        type="email"
+                        defaultValue="user@example.com"
+                    />
+                    <TextArea placeholder="Bio" defaultValue={bio} rows={3} />
+                </Section>
+
+                <div style={{ marginTop: "16px", display: "flex", gap: "8px" }}>
                     <Button
                         data-variant="accent"
                         onClick={() => setSheetOpen(false)}
                     >
-                        Got it
+                        Save Changes
                     </Button>
-                    <Button onClick={() => setSheetOpen(false)}>Close</Button>
+                    <Button onClick={() => setSheetOpen(false)}>Cancel</Button>
                 </div>
             </Sheet>
         </div>

@@ -1,0 +1,9 @@
+[data-ms-textinput] {
+    display: block;
+    width: 100%;
+
+    padding: 10px 12px;
+
+    font-size: 16px;
+    font-weight: 400;
+}

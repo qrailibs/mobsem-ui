@@ -1,0 +1,17 @@
+[data-ms-textarea] {
+    display: block;
+    width: 100%;
+
+    padding: 10px 12px;
+
+    font-size: 16px;
+    font-weight: 400;
+
+    height: auto;
+    max-height: 140px;
+
+    overflow-y: hidden;
+    field-sizing: content;
+    resize: none;
+    transition: height 0.2s ease;
+}
