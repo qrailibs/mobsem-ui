@@ -1,0 +1,58 @@
+[data-ms-slider-container] {
+    position: relative;
+    width: 100%;
+}
+
+[data-ms-slider-tooltip] {
+    position: absolute;
+    transform: translateX(-50%);
+    pointer-events: none;
+    z-index: 10;
+}
+
+[data-ms-slider] {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+}
+
+/* Track styles */
+[data-ms-slider]::-webkit-slider-runnable-track {
+    width: 100%;
+}
+
+[data-ms-slider]::-moz-range-track {
+    width: 100%;
+}
+
+[data-ms-slider]::-moz-range-progress {
+    /* Firefox progress styling handled in default.css */
+}
+
+/* Thumb styles */
+[data-ms-slider]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+}
+
+[data-ms-slider]::-moz-range-thumb {
+    cursor: pointer;
+    border: none;
+}
+
+/* Disabled state */
+[data-ms-slider]:disabled {
+    cursor: not-allowed;
+}
+
+[data-ms-slider]:disabled::-webkit-slider-thumb {
+    cursor: not-allowed;
+}
+
+[data-ms-slider]:disabled::-moz-range-thumb {
+    cursor: not-allowed;
+}

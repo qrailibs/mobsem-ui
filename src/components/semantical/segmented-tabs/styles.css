@@ -1,0 +1,88 @@
+[data-ms-segmented-tabs-container] {
+    display: inline-flex;
+    width: 100%;
+}
+
+[data-ms-segmented-tabs] {
+    position: relative;
+    display: inline-flex;
+    width: 100%;
+    background-color: var(--color-neutral-200);
+    border-radius: 10px;
+    padding: 2px;
+    gap: 0;
+}
+
+[data-ms-segmented-tabs-indicator] {
+    position: absolute;
+    top: 2px;
+    left: 0;
+    height: calc(100% - 4px);
+    background-color: var(--color-neutral-0);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+    z-index: 1;
+}
+
+[data-ms-segmented-tab-button] {
+    position: relative;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 16px;
+    border: none;
+    background: transparent;
+    color: var(--color-neutral-600);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    white-space: nowrap;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+[data-ms-segmented-tab-button][data-selected] {
+    color: var(--color-neutral-900);
+}
+
+/* Active/Press state */
+[data-ms-segmented-tab-button]:active {
+    transform: scale(0.97);
+    transition: transform 0.1s cubic-bezier(0.4, 0, 0.2, 1),
+        color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Focus state */
+[data-ms-segmented-tab-button]:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--color-accent-500);
+    border-radius: 8px;
+}
+
+/* Hover state for non-selected tabs on devices that support hover */
+@media (hover: hover) {
+    [data-ms-segmented-tab-button]:not([data-selected]):hover {
+        color: var(--color-neutral-800);
+    }
+}
+
+/* Disabled state */
+[data-ms-segmented-tabs][data-disabled] {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 480px) {
+    [data-ms-segmented-tab-button] {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
+}

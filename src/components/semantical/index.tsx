@@ -9,5 +9,8 @@ export * from "./popover";
 export * from "./scrollable";
 export * from "./search-input";
 export * from "./section";
+export * from "./segmented-tabs";
+export * from "./slider";
 export * from "./text-area";
 export * from "./text-input";
+export * from "./toggle";

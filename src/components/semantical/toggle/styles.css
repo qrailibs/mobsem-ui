@@ -1,0 +1,101 @@
+[data-ms-toggle-container] {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    position: relative;
+}
+
+[data-ms-toggle-container][data-bounce="true"] {
+    animation: ms-toggle-bounce 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes ms-toggle-bounce {
+    0% {
+        transform: scale(0.95);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+[data-ms-toggle] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+[data-ms-toggle-track] {
+    position: relative;
+    display: inline-block;
+    width: 51px;
+    height: 31px;
+    background-color: var(--color-neutral-300);
+    border-radius: 999px;
+    transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-ms-toggle]:checked + [data-ms-toggle-track] {
+    background-color: var(--color-accent-500);
+}
+
+[data-ms-toggle-thumb] {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 27px;
+    height: 27px;
+    background-color: var(--color-neutral-0);
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-ms-toggle]:checked + [data-ms-toggle-track] [data-ms-toggle-thumb] {
+    transform: translateX(20px);
+}
+
+/* Active state */
+[data-ms-toggle-container]:active [data-ms-toggle-thumb] {
+    width: 31px;
+    transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-ms-toggle]:checked ~ [data-ms-toggle-container]:active [data-ms-toggle-thumb] {
+    transform: translateX(16px);
+}
+
+/* Disabled state */
+[data-ms-toggle]:disabled + [data-ms-toggle-track] {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+[data-ms-toggle]:disabled ~ [data-ms-toggle-container] {
+    cursor: not-allowed;
+}
+
+[data-ms-toggle-container]:has([data-ms-toggle]:disabled) {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+/* Focus state */
+[data-ms-toggle]:focus-visible + [data-ms-toggle-track] {
+    box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.2);
+}
+
+/* Hover state - subtle enhancement */
+@media (hover: hover) {
+    [data-ms-toggle-container]:hover [data-ms-toggle-track]:not(
+            [data-ms-toggle]:disabled + [data-ms-toggle-track]
+        ) {
+        filter: brightness(0.95);
+    }
+}
+

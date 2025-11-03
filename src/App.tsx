@@ -12,6 +12,9 @@ import {
     SearchInput,
     Section,
     Label,
+    Slider,
+    Toggle,
+    SegmentedTabs,
 } from "components/semantical";
 
 import "reset.css";
@@ -34,6 +37,13 @@ export default function App() {
     const [searchQuery, setSearchQuery] = useState("");
     const [name, setName] = useState("");
     const [bio, setBio] = useState("");
+    const [volume, setVolume] = useState(50);
+    const [brightness, setBrightness] = useState(75);
+    const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+    const [darkModeEnabled, setDarkModeEnabled] = useState(false);
+    const [selectedView, setSelectedView] = useState("grid");
+    const [selectedFilter, setSelectedFilter] = useState("all");
+    const [activeTab, setActiveTab] = useState("input");
 
     const handleCheck = (id: number) => {
         setItems((prev) =>
@@ -49,76 +59,270 @@ export default function App() {
 
     return (
         <div className="app">
-            <Caption level={1}>MobSem UI Components</Caption>
+            <Scrollable scroll="y" h={640}>
+                <Caption level={1}>MobSem UI Components</Caption>
+                <div style={{ marginTop: "12px" }}>
+                    <SegmentedTabs
+                        options={[
+                            { value: "input", label: "Input" },
+                            { value: "dialogs", label: "Dialogs" },
+                            { value: "other", label: "Other" },
+                        ]}
+                        value={activeTab}
+                        onChange={setActiveTab}
+                    />
+                </div>
 
-            <List gap={8}>
-                <SearchInput
-                    placeholder="Search items..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                />
-
-                <TextInput
-                    placeholder="Enter your name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                />
-
-                <TextArea
-                    placeholder="Tell us about yourself..."
-                    value={bio}
-                    onChange={(e) => setBio(e.target.value)}
-                />
-            </List>
-
-            <Scrollable
-                scroll="y"
-                h={240}
-                gap={0}
-                style={{ marginTop: "16px" }}
-            >
-                <Caption level={2}>Items List</Caption>
-
-                <List px={6} py={10} gap={4}>
-                    {filteredItems.length > 0 ? (
-                        filteredItems.map((item) => (
-                            <Holdable
-                                key={item.id}
-                                render={(props) => (
-                                    <ListItem {...props}>
-                                        <Checkbox
-                                            defaultChecked={item.checked}
-                                            onChange={() =>
-                                                handleCheck(item.id)
-                                            }
-                                        />
-                                        <hgroup>
-                                            <p>{item.name}</p>
-                                            <small>Option</small>
-                                        </hgroup>
-                                    </ListItem>
-                                )}
-                                menu={[
-                                    {
-                                        label: "Edit",
-                                        onHandle: () => console.log("Edit"),
-                                    },
-                                    {
-                                        label: "Delete",
-                                        variant: "destructive",
-                                        onHandle: () => console.log("Delete"),
-                                    },
-                                ]}
+                {activeTab === "input" && (
+                    <>
+                        <List gap={8}>
+                            <SearchInput
+                                placeholder="Search items..."
+                                value={searchQuery}
+                                onChange={(e) => setSearchQuery(e.target.value)}
                             />
-                        ))
-                    ) : (
-                        <p style={{ textAlign: "center", opacity: 0.5 }}>
-                            No items found
-                        </p>
-                    )}
-                </List>
+
+                            <TextInput
+                                placeholder="Enter your name"
+                                value={name}
+                                onChange={(e) => setName(e.target.value)}
+                            />
+
+                            <TextArea
+                                placeholder="Tell us about yourself..."
+                                value={bio}
+                                onChange={(e) => setBio(e.target.value)}
+                            />
+
+                            <div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        marginBottom: "8px",
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            fontWeight: 500,
+                                        }}
+                                    >
+                                        Volume
+                                    </span>
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            opacity: 0.6,
+                                        }}
+                                    >
+                                        {volume}%
+                                    </span>
+                                </div>
+                                <Slider
+                                    min={0}
+                                    max={100}
+                                    value={volume}
+                                    onChange={(e) =>
+                                        setVolume(parseInt(e.target.value))
+                                    }
+                                />
+                            </div>
+
+                            <div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        marginBottom: "8px",
+                                    }}
+                                >
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            fontWeight: 500,
+                                        }}
+                                    >
+                                        Brightness
+                                    </span>
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            opacity: 0.6,
+                                        }}
+                                    >
+                                        {brightness}%
+                                    </span>
+                                </div>
+                                <Slider
+                                    min={0}
+                                    max={100}
+                                    value={brightness}
+                                    onChange={(e) =>
+                                        setBrightness(parseInt(e.target.value))
+                                    }
+                                    variant="thick"
+                                />
+                            </div>
+
+                            <div
+                                style={{
+                                    display: "flex",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                }}
+                            >
+                                <span
+                                    style={{
+                                        fontSize: "14px",
+                                        fontWeight: 500,
+                                    }}
+                                >
+                                    Notifications
+                                </span>
+                                <Toggle
+                                    checked={notificationsEnabled}
+                                    onChange={(e) =>
+                                        setNotificationsEnabled(
+                                            e.target.checked
+                                        )
+                                    }
+                                />
+                            </div>
+                        </List>
+                    </>
+                )}
+
+                {activeTab === "dialogs" && (
+                    <>
+                        <Scrollable
+                            scroll="y"
+                            h={240}
+                            gap={0}
+                            style={{ marginTop: "16px" }}
+                        >
+                            <Caption level={2}>Items List</Caption>
+
+                            <List px={6} py={10} gap={4}>
+                                {filteredItems.length > 0 ? (
+                                    filteredItems.map((item) => (
+                                        <Holdable
+                                            key={item.id}
+                                            render={(props) => (
+                                                <ListItem {...props}>
+                                                    <Checkbox
+                                                        defaultChecked={
+                                                            item.checked
+                                                        }
+                                                        onChange={() =>
+                                                            handleCheck(item.id)
+                                                        }
+                                                    />
+                                                    <hgroup>
+                                                        <p>{item.name}</p>
+                                                        <small>Option</small>
+                                                    </hgroup>
+                                                </ListItem>
+                                            )}
+                                            menu={[
+                                                {
+                                                    label: "Edit",
+                                                    onHandle: () =>
+                                                        console.log("Edit"),
+                                                },
+                                                {
+                                                    label: "Delete",
+                                                    variant: "destructive",
+                                                    onHandle: () =>
+                                                        console.log("Delete"),
+                                                },
+                                            ]}
+                                        />
+                                    ))
+                                ) : (
+                                    <p
+                                        style={{
+                                            textAlign: "center",
+                                            opacity: 0.5,
+                                        }}
+                                    >
+                                        No items found
+                                    </p>
+                                )}
+                            </List>
+                        </Scrollable>
+                        <Button onClick={() => setSheetOpen(true)}>
+                            Open Sheet
+                        </Button>
+                    </>
+                )}
+
+                {activeTab === "other" && (
+                    <Section style={{ marginTop: "16px" }}>
+                        <Caption level={3}>Segmented Tabs</Caption>
+
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: "16px",
+                                marginTop: "12px",
+                            }}
+                        >
+                            <div>
+                                <div style={{ marginBottom: "8px" }}>
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            fontWeight: 500,
+                                        }}
+                                    >
+                                        View Mode
+                                    </span>
+                                </div>
+                                <SegmentedTabs
+                                    options={[
+                                        { value: "grid", label: "Grid" },
+                                        { value: "list", label: "List" },
+                                        { value: "compact", label: "Compact" },
+                                    ]}
+                                    value={selectedView}
+                                    onChange={setSelectedView}
+                                />
+                            </div>
+
+                            <div>
+                                <div style={{ marginBottom: "8px" }}>
+                                    <span
+                                        style={{
+                                            fontSize: "14px",
+                                            fontWeight: 500,
+                                        }}
+                                    >
+                                        Filter
+                                    </span>
+                                </div>
+                                <SegmentedTabs
+                                    options={[
+                                        { value: "all", label: "All" },
+                                        { value: "active", label: "Active" },
+                                        {
+                                            value: "completed",
+                                            label: "Completed",
+                                        },
+                                        {
+                                            value: "archived",
+                                            label: "Archived",
+                                        },
+                                    ]}
+                                    value={selectedFilter}
+                                    onChange={setSelectedFilter}
+                                />
+                            </div>
+                        </div>
+                    </Section>
+                )}
             </Scrollable>
-            <Button onClick={() => setSheetOpen(true)}>Open Sheet</Button>
 
             <Sheet
                 open={sheetOpen}

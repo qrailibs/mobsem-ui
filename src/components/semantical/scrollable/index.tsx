@@ -4,8 +4,8 @@ import { PropsWithChildren } from "helpers/types";
 import "./styles.css";
 
 export interface ScrollableProps extends PropsWithChildren<HTMLDivElement> {
-    w?: number;
-    h?: number;
+    w?: number | string;
+    h?: number | string;
     scroll: "x" | "y" | "x,y";
     gap?: number;
     overscroll?: "auto" | "contain" | "none";
@@ -38,6 +38,8 @@ export const Scrollable = forwardRef<HTMLDivElement, ScrollableProps>(
                         "--container-gap": `${gap ?? 4}px`,
                         width: w,
                         height: h,
+                        minHeight: h,
+                        maxHeight: h,
                         ...props.style,
                     } as CSSProperties
                 }
