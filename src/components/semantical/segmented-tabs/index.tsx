@@ -6,9 +6,11 @@ import { vibrate } from "hooks/useFeedback";
 export interface SegmentedTabsOption {
     value: string;
     label: string;
+    icon?: React.ReactNode;
 }
 
-export interface SegmentedTabsProps extends Omit<Props<HTMLDivElement>, 'onChange'> {
+export interface SegmentedTabsProps
+    extends Omit<Props<HTMLDivElement>, "onChange"> {
     options: SegmentedTabsOption[];
     value?: string;
     defaultValue?: string;
@@ -63,27 +65,19 @@ export const SegmentedTabs = forwardRef<HTMLDivElement, SegmentedTabsProps>(
         const handleTabClick = useCallback(
             (optionValue: string) => {
                 vibrate(10);
-                
+
                 if (!isControlled) {
                     setSelectedValue(optionValue);
                 }
-                
+
                 onChange?.(optionValue);
             },
             [isControlled, onChange]
         );
 
         return (
-            <div
-                ref={ref}
-                data-ms-segmented-tabs-container
-                {...props}
-            >
-                <div
-                    ref={containerRef}
-                    data-ms-segmented-tabs
-                    role="tablist"
-                >
+            <div ref={ref} data-ms-segmented-tabs-container {...props}>
+                <div ref={containerRef} data-ms-segmented-tabs role="tablist">
                     <div
                         data-ms-segmented-tabs-indicator
                         style={{
@@ -104,6 +98,7 @@ export const SegmentedTabs = forwardRef<HTMLDivElement, SegmentedTabsProps>(
                                 onClick={() => handleTabClick(option.value)}
                                 type="button"
                             >
+                                {option.icon}
                                 {option.label}
                             </button>
                         );
@@ -115,4 +110,3 @@ export const SegmentedTabs = forwardRef<HTMLDivElement, SegmentedTabsProps>(
 );
 
 SegmentedTabs.displayName = "SegmentedTabs";
-

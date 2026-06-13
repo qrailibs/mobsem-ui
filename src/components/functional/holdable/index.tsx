@@ -282,20 +282,33 @@ export function Holdable({
             animateOffsetToZero();
         };
 
+        // Prevent the base page from scrolling while the menu is open.
+        // touchmove must be non-passive so preventDefault actually blocks it.
+        const preventScroll = (e: TouchEvent) => e.preventDefault();
+
         document.addEventListener("keydown", onEscape);
         document.addEventListener("mousemove", onGlobalMove);
         document.addEventListener("touchmove", onGlobalMove);
+        document.addEventListener("touchmove", preventScroll, {
+            passive: false,
+        });
         document.addEventListener("mouseup", onGlobalEnd);
         document.addEventListener("touchend", onGlobalEnd);
+
+        const prevHtmlOverflow = document.documentElement.style.overflow;
+        const prevBodyOverflow = document.body.style.overflow;
+        document.documentElement.style.overflow = "hidden";
         document.body.style.overflow = "hidden";
 
         return () => {
             document.removeEventListener("keydown", onEscape);
             document.removeEventListener("mousemove", onGlobalMove);
             document.removeEventListener("touchmove", onGlobalMove);
+            document.removeEventListener("touchmove", preventScroll);
             document.removeEventListener("mouseup", onGlobalEnd);
             document.removeEventListener("touchend", onGlobalEnd);
-            document.body.style.overflow = "";
+            document.documentElement.style.overflow = prevHtmlOverflow;
+            document.body.style.overflow = prevBodyOverflow;
         };
     }, [opened]);
 

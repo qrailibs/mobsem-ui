@@ -22,6 +22,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
         ref
     ) => {
         const [isOpen, setIsOpen] = useState(open);
+        const [isEntering, setIsEntering] = useState(open);
         const [isClosing, setIsClosing] = useState(false);
         const [isFullscreen, setIsFullscreen] = useState(false);
         const [isDragging, setIsDragging] = useState(false);
@@ -43,6 +44,12 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
             // Opening
             if (open && !prevOpenRef.current) {
                 setIsOpen(true);
+                // Render at the closed position first, then flip on the next
+                // frame so the transition animates the sheet sliding up.
+                setIsEntering(true);
+                requestAnimationFrame(() => {
+                    requestAnimationFrame(() => setIsEntering(false));
+                });
             }
             // Closing - trigger animation instead of immediate close
             else if (!open && prevOpenRef.current && isOpen) {
@@ -72,6 +79,16 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
 
             prevOpenRef.current = open;
         }, [open, isOpen, onClose]);
+
+        // Animate in when the sheet is mounted already open on first render
+        useEffect(() => {
+            if (!open) return;
+            const raf = requestAnimationFrame(() => {
+                requestAnimationFrame(() => setIsEntering(false));
+            });
+            return () => cancelAnimationFrame(raf);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+        }, []);
 
         // Update viewport height on resize (critical for mobile browsers)
         useEffect(() => {
@@ -291,6 +308,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
                     ref={sheetRef}
                     data-ms-sheet
                     data-open={isOpen}
+                    data-entering={isEntering}
                     data-closing={isClosing}
                     data-fullscreen={isFullscreen}
                     data-dragging={isDragging}

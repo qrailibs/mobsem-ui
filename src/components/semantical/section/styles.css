@@ -1,7 +1,23 @@
 [data-ms-section] {
     display: flex;
     flex-direction: column;
-    gap: 8px;
 
-    padding: 16px;
+    gap: 8px;
+    padding: 12px;
+
+    &[data-labeled="true"] {
+        position: relative;
+
+        margin-top: 6px;
+        padding-top: 16px;
+    }
+}
+
+[data-ms-section-label] {
+    position: absolute;
+    top: -10px;
+    left: 12px;
+
+    font-size: 13px;
+    font-weight: 500;
 }
