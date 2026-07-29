@@ -1,0 +1,8 @@
+/* Centered, phone-width content column. */
+[data-ms-container] {
+    width: 100%;
+    max-width: var(--container-max, 420px);
+
+    margin-left: auto;
+    margin-right: auto;
+}

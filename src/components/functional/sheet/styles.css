@@ -17,10 +17,15 @@
     transform: translateY(calc(100% + 20px));
     opacity: 0;
 
-    transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
-        opacity 0.35s ease, height 0.25s ease;
+    transition:
+        transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+        opacity 0.35s ease,
+        height 0.25s ease;
 
-    touch-action: none;
+    /* Base allows vertical panning so the content can scroll when it's meant
+       to; the drag handle and content opt in/out below. A blanket `none` here
+       would block the content scroll via the touch-action ancestor chain. */
+    touch-action: pan-y;
 
     /* Gradient blur backdrop behind the sheet */
     &::before {
@@ -77,7 +82,8 @@
         animation: none !important;
         transform: translateY(calc(100% + 20px)) !important;
         opacity: 0 !important;
-        transition: transform 0.25s cubic-bezier(0.4, 0, 1, 1),
+        transition:
+            transform 0.25s cubic-bezier(0.4, 0, 1, 1),
             opacity 0.25s cubic-bezier(0.4, 0, 1, 1) !important;
         /* Keep height fixed - don't let it change during close */
         height: var(
@@ -124,7 +130,8 @@
 
     &[data-animating="true"] {
         animation: none;
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+        transition:
+            transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
             height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         opacity: 1;
         transform: translateY(0);
@@ -139,8 +146,7 @@
         right: auto;
 
         &::before {
-            left: 0;
-            right: 0;
+            visibility: hidden;
         }
     }
 }
@@ -155,6 +161,10 @@
     cursor: grab;
     user-select: none;
     -webkit-user-select: none;
+
+    /* The handle drives the drag gesture in JS, so the browser must not
+       interpret touches here as scrolls. */
+    touch-action: none;
 
     &:active {
         cursor: grabbing;
@@ -178,4 +188,13 @@
     padding: 0 20px 20px 20px;
 
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+
+    /* Content scrolls only once the sheet is fully open; at partial height a
+       drag should move the sheet (via the handle), not scroll the body. */
+    touch-action: none;
+}
+
+[data-ms-sheet][data-fullscreen="true"] [data-ms-sheet-content] {
+    touch-action: pan-y;
 }

@@ -2,7 +2,9 @@ html,
 body,
 .root {
     overscroll-behavior: none;
-    touch-action: none;
+    /* Allow panning both axes so the page (and nested scrollers) scroll on
+       touch devices; pinch/double-tap zoom stay disabled. */
+    touch-action: pan-x pan-y;
     height: 100%;
 }
 

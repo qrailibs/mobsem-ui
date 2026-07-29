@@ -4,7 +4,13 @@ import { PropsWithChildren } from "helpers/types";
 import "./styles.css";
 
 export interface LabelProps extends PropsWithChildren<HTMLSpanElement> {
-    variant?: "default" | "alert" | "tag";
+    variant?:
+        | "default"
+        | "outline"
+        | "accent"
+        | "danger"
+        | "warning"
+        | "success";
 }
 
 export const Label = forwardRef<HTMLSpanElement, LabelProps>(
@@ -14,8 +20,7 @@ export const Label = forwardRef<HTMLSpanElement, LabelProps>(
                 {children}
             </span>
         );
-    }
+    },
 );
 
 Label.displayName = "Label";
-

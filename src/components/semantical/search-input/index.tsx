@@ -1,4 +1,5 @@
 import { forwardRef, InputHTMLAttributes } from "react";
+import { usePressFeedback } from "hooks/useFeedback";
 
 import "./styles.css";
 
@@ -9,6 +10,10 @@ export interface SearchInputProps
 
 export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
     ({ ...props }, ref) => {
+        const pressHandlers = usePressFeedback<HTMLInputElement>(props, {
+            skipWhenFocused: true,
+        });
+
         return (
             <div data-ms-searchinput-wrapper>
                 <svg
@@ -24,7 +29,13 @@ export const SearchInput = forwardRef<HTMLInputElement, SearchInputProps>(
                     <circle cx="11" cy="11" r="8" />
                     <path d="m21 21-4.35-4.35" />
                 </svg>
-                <input ref={ref} data-ms-searchinput type="search" {...props} />
+                <input
+                    ref={ref}
+                    data-ms-searchinput
+                    type="search"
+                    {...pressHandlers}
+                    {...props}
+                />
             </div>
         );
     }

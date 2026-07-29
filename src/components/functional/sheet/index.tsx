@@ -19,7 +19,7 @@ export interface SheetProps extends PropsWithChildren<HTMLDivElement> {
 export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
     (
         { children, open = false, onClose, defaultHeight = 50, ...props },
-        ref
+        ref,
     ) => {
         const [isOpen, setIsOpen] = useState(open);
         const [isEntering, setIsEntering] = useState(open);
@@ -29,7 +29,7 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
         const [dragOffset, setDragOffset] = useState(0);
         const [isAnimating, setIsAnimating] = useState(false);
         const [viewportHeight, setViewportHeight] = useState(
-            window.innerHeight
+            window.innerHeight,
         );
         const [closingHeight, setClosingHeight] = useState<number | null>(null);
 
@@ -87,7 +87,6 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
                 requestAnimationFrame(() => setIsEntering(false));
             });
             return () => cancelAnimationFrame(raf);
-            // eslint-disable-next-line react-hooks/exhaustive-deps
         }, []);
 
         // Update viewport height on resize (critical for mobile browsers)
@@ -349,9 +348,9 @@ export const Sheet = forwardRef<HTMLDivElement, SheetProps>(
                     </div>
                 </div>
             </>,
-            portalRoot
+            portalRoot,
         );
-    }
+    },
 );
 
 Sheet.displayName = "Sheet";

@@ -1,85 +1,47 @@
-/* Scrollable element with CSS mask fade */
+/* Scrollable
+   The wrapper clips overflow and paints the transparent edge fade; a separate
+   inner viewport is the actual scroll surface. Keeping the mask off the
+   scrolling element is deliberate — a mask on a scroll container disables
+   touch scrolling on iOS and also fades the scrollbar away. */
 [data-ms-scrollable] {
+    position: relative;
     width: 100%;
     height: 100%;
+    overflow: hidden;
 
-    display: flex;
-    flex-direction: column;
-    gap: var(--container-gap);
-
-    /* Background color */
-    background: var(--color-neutral-0);
-
-    overflow-x: hidden;
-    overflow-y: hidden;
-
-    /* iOS-like momentum scrolling by default */
-    -webkit-overflow-scrolling: touch;
-    overflow-scrolling: touch;
-
-    /* Default overscroll behavior is contained to avoid page scroll chaining */
-    overscroll-behavior: contain;
-
-    /* Mask fade distance */
-    --mask-preserved-size: 16px;
+    /* Edge fade geometry */
     --mask-size: 24px;
+    /* Space kept clear so the first/last items sit past the fade at rest */
+    --mask-preserved-size: 16px;
 }
 
-/* Vertical scroll mask */
+/* --- Edge fade: transparent gradient mask on the non-scrolling wrapper --- */
 [data-ms-scrollable][data-scroll="y"] {
-    /* Add padding so content isn't cut off and gradient space is preserved */
-    padding-top: var(--mask-preserved-size);
-    padding-bottom: var(--mask-preserved-size);
-
-    /* The CSS mask for vertical scrolling */
-    --mask-image-content: linear-gradient(
+    --mask-image: linear-gradient(
         to bottom,
         transparent,
         black var(--mask-size),
         black calc(100% - var(--mask-size)),
         transparent
     );
-
-    mask-image: var(--mask-image-content);
-    -webkit-mask-image: var(--mask-image-content);
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
+    mask-image: var(--mask-image);
+    -webkit-mask-image: var(--mask-image);
 }
 
-/* Horizontal scroll mask */
 [data-ms-scrollable][data-scroll="x"] {
-    /* Add padding so content isn't cut off and gradient space is preserved */
-    padding-left: var(--mask-preserved-size);
-    padding-right: var(--mask-preserved-size);
-
-    /* The CSS mask for horizontal scrolling */
-    --mask-image-content: linear-gradient(
+    --mask-image: linear-gradient(
         to right,
         transparent,
         black var(--mask-size),
         black calc(100% - var(--mask-size)),
         transparent
     );
-
-    mask-image: var(--mask-image-content);
-    -webkit-mask-image: var(--mask-image-content);
-    mask-size: 100% 100%;
-    -webkit-mask-size: 100% 100%;
-    mask-repeat: no-repeat;
-    -webkit-mask-repeat: no-repeat;
+    mask-image: var(--mask-image);
+    -webkit-mask-image: var(--mask-image);
 }
 
-/* Bidirectional scroll mask */
 [data-ms-scrollable][data-scroll="x,y"] {
-    padding-top: var(--mask-preserved-size);
-    padding-bottom: var(--mask-preserved-size);
-    padding-left: var(--mask-preserved-size);
-    padding-right: var(--mask-preserved-size);
-
-    /* The CSS mask for bidirectional scrolling */
-    --mask-image-content: linear-gradient(
+    --mask-image: linear-gradient(
             to bottom,
             transparent,
             black var(--mask-size),
@@ -93,50 +55,57 @@
             black calc(100% - var(--mask-size)),
             transparent
         );
-
-    mask-image: var(--mask-image-content);
-    -webkit-mask-image: var(--mask-image-content);
-    mask-size: 100% 100%, 100% 100%;
-    -webkit-mask-size: 100% 100%, 100% 100%;
-    mask-repeat: no-repeat, no-repeat;
-    -webkit-mask-repeat: no-repeat, no-repeat;
+    mask-image: var(--mask-image);
+    -webkit-mask-image: var(--mask-image);
     mask-composite: intersect;
     -webkit-mask-composite: source-in;
 }
 
-[data-ms-scrollable][data-scroll="x"],
-[data-ms-scrollable][data-scroll="x,y"] {
-    overflow-x: auto;
+/* --- Viewport: the actual scroll surface --- */
+[data-ms-scroll-viewport] {
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+    gap: var(--container-gap);
+
+    /* iOS-like momentum scrolling by default */
+    -webkit-overflow-scrolling: touch;
+    /* Contain overscroll to avoid page scroll chaining by default */
+    overscroll-behavior: contain;
 }
 
-[data-ms-scrollable][data-scroll="y"],
-[data-ms-scrollable][data-scroll="x,y"] {
+[data-ms-scroll-viewport][data-scroll="y"],
+[data-ms-scroll-viewport][data-scroll="x,y"] {
     overflow-y: auto;
+    padding-top: var(--mask-preserved-size);
+    padding-bottom: var(--mask-preserved-size);
+    touch-action: pan-y;
 }
 
-/* Control overscroll behavior */
-[data-ms-scrollable][data-overscroll="auto"] {
+[data-ms-scroll-viewport][data-scroll="x"],
+[data-ms-scroll-viewport][data-scroll="x,y"] {
+    overflow-x: auto;
+    padding-left: var(--mask-preserved-size);
+    padding-right: var(--mask-preserved-size);
+    touch-action: pan-x;
+}
+
+[data-ms-scroll-viewport][data-scroll="x,y"] {
+    touch-action: pan-x pan-y;
+}
+
+/* Overscroll overrides */
+[data-ms-scroll-viewport][data-overscroll="auto"] {
     overscroll-behavior: auto;
 }
 
-[data-ms-scrollable][data-overscroll="none"] {
+[data-ms-scroll-viewport][data-overscroll="none"] {
     overscroll-behavior: none;
 }
 
 /* Allow disabling momentum if desired */
-[data-ms-scrollable][data-momentum="false"] {
+[data-ms-scroll-viewport][data-momentum="false"] {
     -webkit-overflow-scrolling: auto;
-}
-
-/* Improve touch behavior based on axis */
-[data-ms-scrollable][data-scroll="y"] {
-    touch-action: pan-y;
-}
-
-[data-ms-scrollable][data-scroll="x"] {
-    touch-action: pan-x;
-}
-
-[data-ms-scrollable][data-scroll="x,y"] {
-    touch-action: pan-x pan-y;
 }

@@ -1,0 +1,104 @@
+/* SwiftUI-like layout primitives. Only layout lives here (flex/gaps/padding);
+   there is nothing to theme. */
+
+[data-ms-vstack],
+[data-ms-hstack] {
+    display: flex;
+
+    gap: var(--stack-spacing, 0);
+    padding: var(--stack-padding, 0);
+}
+
+[data-ms-vstack] {
+    flex-direction: column;
+}
+
+[data-ms-hstack] {
+    flex-direction: row;
+}
+
+/* Shared cross-axis alignment (SwiftUI `alignment`). */
+[data-ms-vstack][data-align="start"],
+[data-ms-hstack][data-align="start"],
+[data-ms-zstack][data-align="start"] {
+    align-items: flex-start;
+}
+[data-ms-vstack][data-align="center"],
+[data-ms-hstack][data-align="center"],
+[data-ms-zstack][data-align="center"] {
+    align-items: center;
+}
+[data-ms-vstack][data-align="end"],
+[data-ms-hstack][data-align="end"],
+[data-ms-zstack][data-align="end"] {
+    align-items: flex-end;
+}
+[data-ms-vstack][data-align="stretch"],
+[data-ms-hstack][data-align="stretch"],
+[data-ms-zstack][data-align="stretch"] {
+    align-items: stretch;
+}
+[data-ms-vstack][data-align="baseline"],
+[data-ms-hstack][data-align="baseline"] {
+    align-items: baseline;
+}
+
+/* Shared main-axis distribution. */
+[data-ms-vstack][data-justify="start"],
+[data-ms-hstack][data-justify="start"] {
+    justify-content: flex-start;
+}
+[data-ms-vstack][data-justify="center"],
+[data-ms-hstack][data-justify="center"] {
+    justify-content: center;
+}
+[data-ms-vstack][data-justify="end"],
+[data-ms-hstack][data-justify="end"] {
+    justify-content: flex-end;
+}
+[data-ms-vstack][data-justify="between"],
+[data-ms-hstack][data-justify="between"] {
+    justify-content: space-between;
+}
+[data-ms-vstack][data-justify="around"],
+[data-ms-hstack][data-justify="around"] {
+    justify-content: space-around;
+}
+[data-ms-vstack][data-justify="evenly"],
+[data-ms-hstack][data-justify="evenly"] {
+    justify-content: space-evenly;
+}
+
+[data-ms-vstack][data-wrap],
+[data-ms-hstack][data-wrap] {
+    flex-wrap: wrap;
+}
+
+/* ZStack: overlap every child in the same grid cell. */
+[data-ms-zstack] {
+    display: grid;
+    padding: var(--stack-padding, 0);
+}
+
+[data-ms-zstack] > * {
+    grid-area: 1 / 1;
+}
+
+[data-ms-zstack][data-justify="start"] {
+    justify-items: start;
+}
+[data-ms-zstack][data-justify="center"] {
+    justify-items: center;
+}
+[data-ms-zstack][data-justify="end"] {
+    justify-items: end;
+}
+
+/* Spacer: eats the free space along the parent's main axis. */
+[data-ms-spacer] {
+    flex: 1 1 auto;
+    align-self: stretch;
+
+    min-width: var(--spacer-min, 0);
+    min-height: var(--spacer-min, 0);
+}

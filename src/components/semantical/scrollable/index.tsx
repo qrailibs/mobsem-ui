@@ -31,8 +31,6 @@ export const Scrollable = forwardRef<HTMLDivElement, ScrollableProps>(
                 ref={ref}
                 data-ms-scrollable
                 data-scroll={scroll}
-                data-overscroll={overscroll}
-                data-momentum={momentum}
                 style={
                     {
                         "--container-gap": `${gap ?? 4}px`,
@@ -45,7 +43,15 @@ export const Scrollable = forwardRef<HTMLDivElement, ScrollableProps>(
                 }
                 {...props}
             >
-                {children}
+                <div
+                    data-ms-scroll-viewport
+                    data-scroll={scroll}
+                    data-overscroll={overscroll}
+                    data-momentum={momentum}
+                    tabIndex={0}
+                >
+                    {children}
+                </div>
             </div>
         );
     }

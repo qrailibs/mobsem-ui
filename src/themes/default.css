@@ -23,6 +23,7 @@
     --color-neutral-900: #171717;
 
     /* Accent palette */
+    --color-accent-fg: #fff;
     --color-accent-50: #f0f9ff;
     --color-accent-100: #e0f2fe;
     --color-accent-200: #bae6fd;
@@ -45,6 +46,30 @@
     --color-danger-700: #b91c1c;
     --color-danger-800: #991b1b;
     --color-danger-900: #7f1d1d;
+
+    /* Warning palette */
+    --color-warning-50: #fffbeb;
+    --color-warning-100: #fef3c7;
+    --color-warning-200: #fde68a;
+    --color-warning-300: #fcd34d;
+    --color-warning-400: #fbbf24;
+    --color-warning-500: #f59e0b;
+    --color-warning-600: #d97706;
+    --color-warning-700: #b45309;
+    --color-warning-800: #92400e;
+    --color-warning-900: #78350f;
+
+    /* Success palette */
+    --color-success-50: #f0fdf4;
+    --color-success-100: #dcfce7;
+    --color-success-200: #bbf7d0;
+    --color-success-300: #86efac;
+    --color-success-400: #4ade80;
+    --color-success-500: #22c55e;
+    --color-success-600: #16a34a;
+    --color-success-700: #15803d;
+    --color-success-800: #166534;
+    --color-success-900: #14532d;
 }
 
 html {
@@ -113,6 +138,58 @@ h6[data-ms-caption] {
     margin-bottom: 4px;
 }
 
+/* Text */
+[data-ms-text] {
+    font-size: 17px;
+    font-weight: 400;
+    line-height: 1.4;
+
+    color: var(--color-neutral-900);
+}
+[data-ms-text][data-size="title"] {
+    font-size: 20px;
+    font-weight: 600;
+}
+[data-ms-text][data-size="headline"] {
+    font-size: 17px;
+    font-weight: 600;
+}
+[data-ms-text][data-size="body"] {
+    font-size: 17px;
+}
+[data-ms-text][data-size="callout"] {
+    font-size: 16px;
+}
+[data-ms-text][data-size="subheadline"] {
+    font-size: 15px;
+}
+[data-ms-text][data-size="footnote"] {
+    font-size: 13px;
+}
+[data-ms-text][data-size="caption"] {
+    font-size: 12px;
+}
+/* Weight overrides come after size so an explicit `weight` always wins. */
+[data-ms-text][data-weight="regular"] {
+    font-weight: 400;
+}
+[data-ms-text][data-weight="medium"] {
+    font-weight: 500;
+}
+[data-ms-text][data-weight="semibold"] {
+    font-weight: 600;
+}
+[data-ms-text][data-weight="bold"] {
+    font-weight: 700;
+}
+[data-ms-text][data-muted] {
+    color: var(--color-neutral-500);
+}
+[data-ms-text][data-numeric] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+}
+
 /* Checkbox */
 [data-ms-checkbox] {
     width: 18px;
@@ -149,6 +226,40 @@ h6[data-ms-caption] {
     }
 }
 
+/* Radio — same treatment as the checkbox, but round with a filled dot. */
+[data-ms-radio] {
+    width: 18px;
+    height: 18px;
+
+    border: 2px solid var(--color-neutral-300);
+    border-radius: 50%;
+
+    appearance: none;
+
+    cursor: pointer;
+
+    transition: all var(--transition-fast);
+    transition-property: background-color, border-color, color;
+    position: relative;
+
+    &:checked {
+        background-color: var(--color-accent-500);
+        border-color: var(--color-accent-500);
+    }
+
+    &:checked::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        background-color: var(--color-accent-fg);
+    }
+}
+
 /* Button */
 [data-ms-button] {
     flex: 1;
@@ -168,49 +279,104 @@ h6[data-ms-caption] {
     cursor: pointer;
 
     background-color: var(--color-neutral-200);
+    transition: all var(--transition-fast);
 
     &[data-variant="outline"] {
         background-color: transparent;
-        border: 1px solid var(--color-neutral-300);
+        border: 1.5px solid var(--color-neutral-300);
     }
+    &[data-variant="outline"]:active,
+    &[data-variant="outline"]:hover {
+        background-color: var(--color-neutral-300);
+    }
+
+    &[data-variant="ghost"] {
+        background-color: transparent;
+    }
+    &[data-variant="ghost"]:active,
+    &[data-variant="ghost"]:hover {
+        background-color: var(--color-neutral-200);
+    }
+
     &[data-variant="accent"] {
         background-color: var(--color-accent-500);
-        color: var(--color-neutral-0);
+        color: var(--color-accent-fg);
     }
+    &[data-variant="accent"]:active,
+    &[data-variant="accent"]:hover {
+        background-color: var(--color-accent-400);
+    }
+
     &[data-variant="danger"] {
         background-color: var(--color-danger-500);
-        color: var(--color-neutral-0);
+        color: var(--color-accent-fg);
+    }
+    &[data-variant="danger"]:active,
+    &[data-variant="danger"]:hover {
+        background-color: var(--color-danger-400);
+    }
+
+    &[data-variant="warning"] {
+        background-color: var(--color-warning-500);
+        color: var(--color-accent-fg);
+    }
+    &[data-variant="warning"]:active,
+    &[data-variant="warning"]:hover {
+        background-color: var(--color-warning-400);
+    }
+
+    &[data-variant="success"] {
+        background-color: var(--color-success-500);
+        color: var(--color-accent-fg);
+    }
+    &[data-variant="success"]:active,
+    &[data-variant="success"]:hover {
+        background-color: var(--color-success-400);
     }
 }
 
 /* Scrollable */
-[data-ms-scrollable] {
-    scrollbar-width: 10px;
-    scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+[data-ms-scroll-viewport] {
+    background: var(--color-neutral-0);
 
-    -webkit-overflow-scrolling: touch;
-    overflow: auto;
+    /* Scrollbar stays hidden until the zone is hovered; touch devices reveal
+       the native overlay scrollbar on scroll on their own. */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
 
     &::-webkit-scrollbar {
         width: 10px;
         height: 10px;
-        border-radius: 999px;
     }
 
     &::-webkit-scrollbar-track {
         background: transparent;
-        border-radius: 999px;
     }
 
     &::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.3);
+        background-color: transparent;
         border-radius: 999px;
-        border: 2px solid transparent;
+        /* Thick transparent border keeps the thumb resting narrow inside the
+           10px hit target; it widens on hover by shrinking the border. */
+        border: 3px solid transparent;
         background-clip: padding-box;
+        transition:
+            background-color 160ms ease,
+            border-width 160ms ease;
+    }
+}
+
+/* Reveal the scrollbar while hovering anywhere in the scroll zone */
+[data-ms-scrollable]:hover [data-ms-scroll-viewport] {
+    scrollbar-color: var(--color-neutral-300) transparent;
+
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--color-neutral-300);
     }
 
     &::-webkit-scrollbar-thumb:hover {
-        background-color: rgba(0, 0, 0, 0.4);
+        background-color: var(--color-neutral-400);
+        border-width: 2px;
     }
 }
 
@@ -263,20 +429,202 @@ h6[data-ms-caption] {
     color: var(--color-neutral-400);
 }
 
+/* Card */
+[data-ms-card] {
+    background-color: var(--color-neutral-200);
+    color: var(--color-neutral-900);
+
+    border-radius: 20px;
+
+    &[data-variant="outline"] {
+        background-color: transparent;
+        border: 1.5px solid var(--color-neutral-300);
+    }
+    &[data-variant="contrast"] {
+        background-color: var(--color-neutral-900);
+        color: var(--color-neutral-0);
+    }
+    &[data-variant="accent"] {
+        background-color: var(--color-accent-500);
+        color: var(--color-accent-fg);
+    }
+    &[data-variant="accent-outline"] {
+        background-color: transparent;
+        border: 2px solid var(--color-accent-500);
+        color: var(--color-accent-500);
+    }
+    &[data-variant="ghost"] {
+        background-color: transparent;
+    }
+
+    /* On the filled/inverted variants, let descendant text ride the card's
+       own color instead of the default near-black text token. */
+    &[data-variant="contrast"] [data-ms-text],
+    &[data-variant="accent"] [data-ms-text],
+    &[data-variant="accent-outline"] [data-ms-text] {
+        color: inherit;
+    }
+
+    /* Interactive: hover/press tint, tuned per variant. */
+    &[data-interactive] {
+        transition:
+            background-color var(--transition-fast),
+            border-color var(--transition-fast);
+    }
+    &[data-interactive][data-variant="default"]:hover {
+        background-color: var(--color-neutral-300);
+    }
+    &[data-interactive][data-variant="outline"]:hover {
+        background-color: var(--color-neutral-300);
+    }
+    &[data-interactive][data-variant="ghost"]:hover {
+        background-color: var(--color-neutral-100);
+    }
+    &[data-interactive][data-variant="contrast"]:hover {
+        background-color: var(--color-neutral-800);
+    }
+    &[data-interactive][data-variant="accent"]:hover {
+        background-color: var(--color-accent-400);
+    }
+    &[data-interactive][data-variant="accent-outline"]:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-accent-500),
+            transparent 90%
+        );
+    }
+}
+
+/* Float Button */
+[data-ms-floatbutton] {
+    border-radius: 50%;
+    color: var(--color-accent-fg);
+
+    &[data-variant="default"] {
+        background-color: var(--color-accent-500);
+        box-shadow:
+            0 6px 16px rgba(0, 0, 0, 0.22),
+            0 2px 4px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Liquid glass: the refraction (backdrop-filter) is attached per element in
+       JS by <FloatButton>; here we only supply the transparent surface and rim. */
+    &[data-variant="glass"] {
+        background-color: transparent;
+        color: var(--color-neutral-900);
+        box-shadow:
+            0 0 0 0.5px var(--bg-max),
+            0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* Float Nav */
+[data-ms-floatnav-row] {
+    border-radius: 999px;
+}
+
+/* Default variant: solid bar + solid white pill. */
+[data-ms-floatnav][data-variant="default"] [data-ms-floatnav-row] {
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.15),
+        0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+[data-ms-floatnav-indicator] {
+    background-color: var(--color-neutral-0);
+    border-radius: 999px;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.12),
+        0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Glass variant: the whole bar is frosted liquid glass (backdrop-filter
+   attached in JS); here we supply the transparent surface + rim. */
+[data-ms-floatnav][data-variant="glass"] [data-ms-floatnav-row] {
+    color: white;
+    background-color: transparent;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Glass variant: the position box carries no surface of its own — the morphing
+   glass layer inside is the visible pill. */
+[data-ms-floatnav][data-variant="glass"] [data-ms-floatnav-indicator] {
+    background-color: transparent;
+    box-shadow: none;
+}
+
+[data-ms-floatnav][data-variant="glass"] [data-ms-floatnav-indicator-glass] {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+[data-ms-floatnav-item] {
+    color: inherit;
+    transition: all var(--transition-fast);
+    border-radius: 100px;
+}
+
+[data-ms-floatnav-item][data-active] {
+    background-color: rgba(255, 255, 255, 0.25);
+}
+
 /* Label */
 [data-ms-label] {
     background-color: var(--color-neutral-200);
     color: var(--color-neutral-900);
-    border-radius: 6px;
+    border-radius: 50px;
 
-    &[data-variant="alert"] {
-        background-color: var(--color-danger-100);
-        color: var(--color-danger-700);
+    &[data-variant="outline"] {
+        background-color: transparent;
+        color: var(--color-neutral-900);
+        border: 1.5px solid var(--color-neutral-200);
     }
 
-    &[data-variant="tag"] {
-        background-color: var(--color-accent-100);
-        color: var(--color-accent-700);
+    &[data-variant="accent"] {
+        background: color-mix(
+            in srgb,
+            var(--color-accent-500),
+            transparent 95%
+        );
+        color: var(--color-accent-500);
+
+        border: 1.5px solid
+            color-mix(in srgb, var(--color-accent-500), transparent 75%);
+    }
+
+    &[data-variant="danger"] {
+        background: color-mix(
+            in srgb,
+            var(--color-danger-500),
+            transparent 95%
+        );
+        color: var(--color-danger-500);
+
+        border: 1.5px solid
+            color-mix(in srgb, var(--color-danger-500), transparent 75%);
+    }
+
+    &[data-variant="warning"] {
+        background: color-mix(
+            in srgb,
+            var(--color-warning-500),
+            transparent 95%
+        );
+        color: var(--color-warning-500);
+
+        border: 1.5px solid
+            color-mix(in srgb, var(--color-warning-500), transparent 75%);
+    }
+
+    &[data-variant="success"] {
+        background: color-mix(
+            in srgb,
+            var(--color-success-500),
+            transparent 95%
+        );
+        color: var(--color-success-500);
+
+        border: 1.5px solid
+            color-mix(in srgb, var(--color-success-500), transparent 75%);
     }
 }
 
@@ -392,6 +740,185 @@ h6[data-ms-caption] {
     }
 }
 
+/* Select */
+[data-ms-select-trigger] {
+    background-color: var(--color-neutral-100);
+    color: var(--color-neutral-900);
+
+    border: none;
+    border-radius: 10px;
+
+    transition:
+        background-color var(--transition-fast),
+        box-shadow var(--transition-fast);
+
+    &[data-variant="outline"] {
+        background-color: transparent;
+        border: 2px solid var(--color-neutral-200);
+    }
+
+    &[data-placeholder] [data-ms-select-value] {
+        color: var(--color-neutral-400);
+    }
+
+    [data-ms-select-chevron] {
+        color: var(--color-neutral-400);
+    }
+
+    [data-ms-select-search] {
+        background: none;
+        border: none;
+
+        color: inherit;
+
+        caret-color: var(--color-accent-500);
+
+        &::placeholder {
+            color: var(--color-neutral-400);
+        }
+    }
+
+    [data-ms-select-clear] {
+        background: none;
+        border: none;
+        border-radius: 999px;
+
+        color: var(--color-neutral-400);
+    }
+
+    [data-ms-multiselect-chip] {
+        background-color: color-mix(
+            in srgb,
+            var(--color-neutral-900),
+            transparent 92%
+        );
+
+        border-radius: 6px;
+
+        color: inherit;
+
+        [data-ms-multiselect-chip-remove] {
+            background: none;
+            border: none;
+            border-radius: 999px;
+
+            color: var(--color-neutral-400);
+
+            transition:
+                background-color var(--transition-fast),
+                color var(--transition-fast);
+
+            &:hover {
+                background-color: color-mix(
+                    in srgb,
+                    var(--color-neutral-900),
+                    transparent 85%
+                );
+                color: var(--color-neutral-600);
+            }
+        }
+
+        &[data-locked] [data-ms-multiselect-chip-remove] {
+            opacity: 0.4;
+        }
+    }
+
+    &[data-open],
+    &:focus-visible {
+        outline: none;
+        box-shadow: inset 0 0 0 1.5px
+            color-mix(in srgb, var(--color-neutral-900), transparent 88%);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+/* Matches the <Holdable> pop-up menu: translucent, blurred, soft-shadowed. */
+[data-ms-select-panel] {
+    background-color: color-mix(
+        in srgb,
+        var(--color-neutral-700),
+        transparent 70%
+    );
+    color: white;
+
+    border-radius: 10px;
+
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-neutral-300) transparent;
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+    &::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--color-neutral-300);
+        border-radius: 999px;
+    }
+}
+
+[data-ms-select-group-label] {
+    opacity: 0.5;
+}
+
+[data-ms-select-empty] {
+    opacity: 0.6;
+}
+
+[data-ms-select-option] {
+    background-color: transparent;
+    color: inherit;
+
+    border: none;
+
+    transition:
+        background var(--transition-fast),
+        color var(--transition-fast);
+
+    & + & {
+        border-top: 1px solid color-mix(in srgb, currentColor, transparent 75%);
+    }
+
+    small {
+        opacity: 0.65;
+    }
+
+    [data-ms-select-check] {
+        color: var(--color-accent-300);
+    }
+
+    &[data-highlighted],
+    &:active,
+    &:hover {
+        background-color: color-mix(
+            in srgb,
+            var(--color-neutral-900),
+            transparent 97%
+        );
+    }
+
+    &[data-selected] {
+        background-color: rgba(255, 255, 255, 0.15);
+    }
+
+    &[data-disabled] {
+        opacity: 0.4;
+    }
+
+    &[data-locked]:not([data-selected]) {
+        opacity: 0.4;
+    }
+}
+
 /* Slider */
 [data-ms-slider-tooltip] {
     top: -36px;
@@ -413,7 +940,8 @@ h6[data-ms-caption] {
 
 [data-ms-slider] {
     --slider-height: 8px;
-    --slide-thumb-offset: -8px;
+    --slide-thumb-offset-x: 0;
+    --slide-thumb-offset-y: -8px;
     --slider-thumb-height: 24px;
     --slider-thumb-width: 40px;
     --slider-thumb-radius: 100px;
@@ -423,11 +951,12 @@ h6[data-ms-caption] {
 
     &[data-variant="thick"] {
         --slider-height: 40px;
+        --slide-thumb-offset-y: 0;
         --slider-radius: 12px;
 
         --slide-thumb-offset: 0px;
         --slider-thumb-height: 40px;
-        --slider-thumb-width: 40px;
+        --slider-thumb-width: 10px;
         --slider-thumb-radius: 12px;
     }
 
@@ -442,14 +971,14 @@ h6[data-ms-caption] {
             var(--color-neutral-200) 100%
         );
         border-radius: var(--slider-radius);
-        transition: all 0.2s ease;
+        /* No transition here: the fill must follow the thumb instantly while
+           dragging (a transition makes it lag behind, especially on iOS). */
     }
 
     &::-moz-range-track {
         height: var(--slider-height);
         background: var(--color-neutral-200);
         border-radius: var(--slider-radius);
-        transition: all 0.2s ease;
     }
 
     &::-moz-range-progress {
@@ -469,7 +998,10 @@ h6[data-ms-caption] {
             0 1px 3px rgba(0, 0, 0, 0.1);
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border: 0.5px solid rgba(0, 0, 0, 0.04);
-        transform: translateY(var(--slide-thumb-offset));
+        transform: translate(
+            var(--slide-thumb-offset-x),
+            var(--slide-thumb-offset-y)
+        );
     }
 
     &::-moz-range-thumb {
@@ -482,19 +1014,24 @@ h6[data-ms-caption] {
             0 1px 3px rgba(0, 0, 0, 0.1);
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border: 0.5px solid rgba(0, 0, 0, 0.04);
-        transform: translateY(var(--slide-thumb-offset));
+        transform: translate(
+            var(--slide-thumb-offset-x),
+            var(--slide-thumb-offset-y)
+        );
     }
 
     /* Active states */
     &:active::-webkit-slider-thumb {
-        transform: scale(1.1) translateY(var(--slide-thumb-offset));
+        transform: scale(1.1)
+            translate(var(--slide-thumb-offset-x), var(--slide-thumb-offset-y));
         box-shadow:
             0 3px 12px rgba(0, 0, 0, 0.2),
             0 2px 4px rgba(0, 0, 0, 0.15);
     }
 
     &:active::-moz-range-thumb {
-        transform: scale(1.1) translateY(var(--slide-thumb-offset));
+        transform: scale(1.1)
+            translate(var(--slide-thumb-offset-x), var(--slide-thumb-offset-y));
         box-shadow:
             0 3px 12px rgba(0, 0, 0, 0.2),
             0 2px 4px rgba(0, 0, 0, 0.15);
@@ -522,14 +1059,20 @@ h6[data-ms-caption] {
 
     /* Thick variant - no scale on active */
     &[data-variant="thick"]:active::-webkit-slider-thumb {
-        transform: translateY(var(--slide-thumb-offset));
+        transform: translate(
+            var(--slide-thumb-offset-x),
+            var(--slide-thumb-offset-y)
+        );
         box-shadow:
             0 3px 12px rgba(0, 0, 0, 0.2),
             0 2px 4px rgba(0, 0, 0, 0.15);
     }
 
     &[data-variant="thick"]:active::-moz-range-thumb {
-        transform: translateY(var(--slide-thumb-offset));
+        transform: translate(
+            var(--slide-thumb-offset-x),
+            var(--slide-thumb-offset-y)
+        );
         box-shadow:
             0 3px 12px rgba(0, 0, 0, 0.2),
             0 2px 4px rgba(0, 0, 0, 0.15);
@@ -541,34 +1084,70 @@ h6[data-ms-caption] {
     /* Defaults — override via style/className on the element. */
     border-radius: 28px;
 
-    /* Enhanced (Chromium): slight blur layered with the liquid-glass
-       refraction (shared SVG filter mounted by <Glass>). Order matters: blur
-       the backdrop first, then displace it.
-       NOTE: url() in backdrop-filter is grammatically valid everywhere, so a
-       plain "declare twice" fallback does NOT work — WebKit accepts this value
-       at parse time and just renders nothing. The fallback is therefore gated
-       behind an engine query below. */
-    backdrop-filter: blur(2px) url("#ms-liquid-glass");
-    -webkit-backdrop-filter: blur(2px) url("#ms-liquid-glass");
-
-    /* Transparent so the refracted backdrop shows through; the rim is the
-       crisp 1px white ring + a soft cast shadow (matches the original). */
+    /* The refraction (backdrop-filter) is attached per element in JS by
+       <Glass> — it generates a displacement map sized to this box and matched
+       to its corner radius, and applies the WebKit blur fallback itself.
+       Here we only supply the transparent surface plus the rim + cast shadow. */
     background-color: transparent;
     box-shadow:
-        0 0 0 1px var(--bg-max),
+        0 0 0 0.5px var(--bg-max),
         0 8px 16px rgba(0, 0, 0, 0.2);
     color: var(--color-neutral-900);
 }
 
-/* WebKit fallback (all iOS browsers — incl. "Chrome" — and Safari are WebKit,
-   which can't reference SVG filters from backdrop-filter). `-webkit-touch-callout`
-   is a WebKit-only property, so this block is ignored by Chromium. Comes after
-   the rule above, so it overrides the non-rendering url() value with a real
-   frosted blur. */
-@supports (-webkit-touch-callout: none) {
-    [data-ms-glass] {
-        backdrop-filter: blur(10px) saturate(1.6);
-        -webkit-backdrop-filter: blur(10px) saturate(1.6);
-        background-color: rgba(255, 255, 255, 0.08);
-    }
+/* Image */
+[data-ms-image] {
+    border-radius: 20px;
+    background-color: var(--color-neutral-200);
+}
+
+[data-ms-image-spinner] {
+    border: 2.5px solid var(--color-neutral-300);
+    border-top-color: var(--color-accent-500);
+    border-radius: 50%;
+}
+
+/* Image viewer (full-screen) */
+[data-ms-image-viewer] {
+    z-index: 100;
+    background-color: rgba(0, 0, 0, var(--viewer-backdrop-opacity, 1));
+    backdrop-filter: blur(3px);
+}
+
+[data-ms-image-viewer-img] {
+    border-radius: 20px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+[data-ms-image-viewer-close] {
+    border: none;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+}
+
+[data-ms-image-viewer-counter] {
+    padding: 4px 10px;
+    border-radius: 999px;
+    background-color: rgba(0, 0, 0, 0.4);
+    color: #fff;
+}
+
+[data-ms-image-viewer-thumb] {
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background-color: transparent;
+}
+[data-ms-image-viewer-thumb][data-active] {
+    border-color: var(--color-accent-500);
+}
+
+/* Carousel */
+[data-ms-carousel-dot] {
+    border: none;
+    border-radius: 999px;
+    background-color: var(--color-neutral-300);
+}
+[data-ms-carousel-dot][data-active] {
+    background-color: var(--color-accent-500);
 }

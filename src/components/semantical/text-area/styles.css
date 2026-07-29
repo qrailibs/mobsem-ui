@@ -2,16 +2,43 @@
     display: block;
     width: 100%;
 
-    padding: 7px 12px 8px;
+    padding: 8px 12px;
 
     font-size: 17px;
     font-weight: 400;
+    /* A single line resolves to line-height + vertical padding, so an empty
+       field is exactly one row (not an arbitrary fixed height). */
+    line-height: 24px;
 
+    /* Height is driven from JS (content scrollHeight); the transition animates
+       the grow/shrink. Once content passes the cap the box scrolls instead. */
     height: auto;
-    max-height: 140px;
+    max-height: 160px;
 
-    overflow-y: hidden;
-    field-sizing: content;
+    overflow-y: auto;
     resize: none;
-    transition: height 0.2s ease;
+    transition:
+        height var(--transition-medium),
+        transform 50ms ease-out;
+
+    /* Bouncy press: dip on pointer-down, spring back on release. `transform`
+       is independent of the height auto-grow, so the two never fight. */
+    &[data-pressed="true"] {
+        transform: scale(0.99);
+    }
+    &[data-bounce="true"] {
+        animation: ms-input-bounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+}
+
+@keyframes ms-input-bounce {
+    0% {
+        transform: scale(0.99);
+    }
+    60% {
+        transform: scale(1.01);
+    }
+    100% {
+        transform: scale(1);
+    }
 }

@@ -36,11 +36,11 @@
 [data-ms-slider]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
-    cursor: pointer;
+    cursor: ew-resize;
 }
 
 [data-ms-slider]::-moz-range-thumb {
-    cursor: pointer;
+    cursor: ew-resize;
     border: none;
 }
 

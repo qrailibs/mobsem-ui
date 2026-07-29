@@ -1,0 +1,33 @@
+[data-ms-card] {
+    display: flex;
+    flex-direction: column;
+
+    gap: 4px;
+    padding: 14px 16px;
+}
+
+/* Interactive cards get the same bouncy press as buttons: dip on pointer-down,
+   spring back on release. (Hover/active colours live in the theme.) */
+[data-ms-card][data-interactive] {
+    cursor: pointer;
+
+    &[data-pressed="true"] {
+        transform: scale(0.99);
+        transition: transform 50ms ease-out;
+    }
+    &[data-bounce="true"] {
+        animation: ms-card-bounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+}
+
+@keyframes ms-card-bounce {
+    0% {
+        transform: scale(0.99);
+    }
+    60% {
+        transform: scale(1.01);
+    }
+    100% {
+        transform: scale(1);
+    }
+}

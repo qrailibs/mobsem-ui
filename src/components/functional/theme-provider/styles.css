@@ -1,0 +1,5 @@
+/* The provider only carries CSS variables; it must not affect layout, so it
+   collapses out of the box model while its custom properties still cascade. */
+[data-ms-theme] {
+    display: contents;
+}
